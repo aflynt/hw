@@ -197,8 +197,10 @@ def nohw_A1SoA2S_given_ds( ds, R):
     Pt2oPt1 = m.exp(-ds/R)
     return Pt2oPt1
 
-def ds_given_dpt(Pt1, Pt2, R):
+def ds_given_dpt(Pt1, Pt2, R, isSI=True):
     ds = -R*m.log(Pt2/Pt1)
+    if not isSI:
+        ds /= 778.2
     return ds
 
 def aoastar(k, M):
@@ -291,6 +293,15 @@ def norm_shock_ptr(M1, k):
     B  = 2*k/(k+1)*M1**2 - (k-1)/(k+1)
     ptr = A**C1 * B**C2
     return ptr
+
+def norm_shock_dvoa(M1: float, k:float) -> float:
+    '''
+    dvoa = (V1 - V2)/a1
+    returns velocity delta relative to incoming speed of sound
+    '''
+    dvoa = (2/(k+1))*(M1*M1 - 1)/M1
+    return dvoa
+
 
 def print_var(name, value, w=12, d=7):
     print(f"{name:20s} = {value:{w}.{d}f} = {value:{w}.3f}")

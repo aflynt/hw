@@ -85,5 +85,10 @@ class TestLib(unittest.TestCase):
         y = 0.81268
         self.assertAlmostEqual(x,y,4)
 
+    def test_norm_shock_dvoa(self):
+        x = gd.norm_shock_dvoa(2.0, 1.4)
+        y = 1.25
+        self.assertAlmostEqual(x,y,4)
+
 if __name__ == '__main__':
     unittest.main()
