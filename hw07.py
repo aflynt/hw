@@ -29,10 +29,16 @@ def ex701():
 
     V2 = Vs - V2p
 
+    M2 = V2/a2p
+
+    pt1 = P1
+    pt2p = isen_ratio_p(g.k, M2)*P2p
+
     print_var("a1'", a1p)
     print_var("V1'", V1p)
     print_var("M1'", M1p)
     print_var("M2'", M2p)
+    print_var("M2", M2)
     print_var("PR", pr)
     print_var("TR", tr)
     print_var("P2'", P2p)
@@ -40,5 +46,7 @@ def ex701():
     print_var("a2'", a2p)
     print_var("V2'", V2p)
     print_var("V2", V2)
+    print_var("pt1'", pt1)
+    print_var("pt2p'", pt2p)
 
 ex701()
