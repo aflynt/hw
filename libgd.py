@@ -1,5 +1,9 @@
 import math as m
 from typing import Tuple
+import numpy as np
+
+def my_cot(x):
+    return 1/m.tan(x)
 
 def my_sign(x):
     '''
@@ -334,3 +338,50 @@ def mach_given_ptr(ptr, k=1.4, M_lo=1.0, M_hi=5):
 def lin_interp(x, x0, x1, y0, y1):
     y = y0 + (x-x0)*(y1-y0)/(x1-x0)
     return y
+
+def zero_ob_beta(theta, beta, M1, k):
+
+    numer = M1**2 * m.sin(beta)**2 - 1
+    denom = 2 + M1**2*(k + m.cos(2*beta))
+
+    y = m.tan(theta) - 2*my_cot(beta) *numer/denom
+    return y
+
+def oblique_beta_zero(M, theta, k=1.4):
+    '''
+    Get oblique shock angle "BETA"
+    M = incoming mach number
+    theta = deflection angle 
+    '''
+
+    betas = np.arange(0.0001,m.pi/3,0.0001)
+    bs = [float(bi) for bi in betas]
+
+    fs = [abs(zero_ob_beta(theta, b, M, k)) for b in bs]
+
+    bmin = bs[0]
+    fmin = fs[0]
+
+    for b,f in zip(bs,fs):
+        if f < fmin:
+            fmin = f
+            bmin = b
+
+    return bmin
+
+def oblique_m2(M1, theta, k=1.4):
+    '''
+    Get oblique shock Mach # behind shock
+    * M1    = incoming mach number
+    * theta = deflection angle 
+    '''
+
+    beta = oblique_beta_zero(M1,theta, k)
+
+    sin_val = m.sin(beta-theta)**2
+    numer   = 1 + (k-1)/2*M1**2*m.sin(beta)**2
+    denom   = k*M1**2*m.sin(beta)**2 - (k-1)/2
+    RHS     = numer / (denom * sin_val)
+    ans     = m.sqrt(RHS)
+
+    return ans

@@ -1,6 +1,7 @@
 
 import unittest
 import libgd as gd
+import math as m
 
 class TestLib(unittest.TestCase):
 
@@ -90,6 +91,34 @@ class TestLib(unittest.TestCase):
         y = 1.25
         #y = 1.00
         self.assertAlmostEqual(x,y,4)
+
+class TestObliques(unittest.TestCase):
+
+    def test_beta(self):
+        x = gd.oblique_beta_zero(4, 20*m.pi/180)
+        y = 0.5666
+        self.assertAlmostEqual(x,y,4)
+
+    def test_m2(self):
+        x = gd.oblique_m2(4, 30*m.pi/180, 1.4)
+        y = 1.8485
+        self.assertAlmostEqual(x,y,3)
+
+    def test_ob2(self):
+        x = gd.oblique_beta_zero(2.2, 14*m.pi/180, 1.4)
+        #x = gd.oblique_m2(2.2, 14*m.pi/180, 1.4)
+        #y = 1.674
+        y = 40*m.pi/180
+        self.assertAlmostEqual(x,y,2)
+
+    def test_ob3(self):
+        M = 1.605
+        beta = 14*m.pi/180
+        M2 = gd.oblique_m2(M, beta, 1.4)
+        x = M2
+
+        y = 1.034
+        self.assertAlmostEqual(x,y,3)
 
 if __name__ == '__main__':
     unittest.main()
