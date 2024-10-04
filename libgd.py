@@ -385,3 +385,30 @@ def oblique_m2(M1, theta, k=1.4):
     ans     = m.sqrt(RHS)
 
     return ans
+
+def oblique_ratio_rho(M1, theta, k=1.4):
+    '''
+    oblique shock density ratio rho2/rho1
+    '''
+
+    beta = oblique_beta_zero(M1,theta, k)
+    #beta = wave angle
+
+    numer = (k+1)*M1**2*m.sin(beta)**2
+    denom = (k-1)*M1**2*m.sin(beta)**2 + 2
+    rr = numer/denom
+    return rr
+
+def oblique_ratio_p(M1, theta, k=1.4):
+
+    beta = oblique_beta_zero(M1,theta, k)
+    pr = 1 + 2*k/(k+1)*(M1**2*m.sin(beta)**2 - 1)
+    return pr
+
+def oblique_ratio_t(M1, theta, k=1.4):
+
+    beta = oblique_beta_zero(M1, theta, k)
+    tr = 1 + 2*(k-1)/(k+1)**2*(k*M1**2*m.sin(beta)**2 + 1)/(M1**2*m.sin(beta)**2)*(M1**2*m.sin(beta)**2-1)
+    return tr
+
+

@@ -120,5 +120,24 @@ class TestObliques(unittest.TestCase):
         y = 1.034
         self.assertAlmostEqual(x,y,3)
 
+    def test_ob_rho(self):
+        M1 = 4
+        theta = 30
+        rr = gd.oblique_ratio_rho(M1, theta*m.pi/180)
+        self.assertAlmostEqual(rr, 3.703, 3)
+
+    def test_ob_ratio_p(self):
+        M1 = 4
+        theta = 30
+        pr = gd.oblique_ratio_p(M1, theta*m.pi/180)
+        self.assertAlmostEqual(pr, 9.240, 3)
+
+    def test_ob_ratio_t(self):
+        M1 = 4
+        theta = 30
+        tr = gd.oblique_ratio_t(M1, theta*m.pi/180)
+        self.assertAlmostEqual(tr, 2.495, 3)
+
+
 if __name__ == '__main__':
     unittest.main()
