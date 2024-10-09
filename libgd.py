@@ -132,6 +132,9 @@ gases_ee = {
 }
 
 def isen_ratio_t(k:float, M:float):
+   '''
+   Isentropic temp ratio of total/static
+   '''
    TR = (1 + (k-1)/2*M**2)
    return TR
 

@@ -138,6 +138,19 @@ class TestObliques(unittest.TestCase):
         tr = gd.oblique_ratio_t(M1, theta*m.pi/180)
         self.assertAlmostEqual(tr, 2.495, 3)
 
+class Test_isentropics(unittest.TestCase):
+    def test_isen_ratio_t(self):
+        tr = gd.isen_ratio_t(1.4, 1.0)
+        self.assertAlmostEqual(tr, 1.2, 4)
+
+    def test_isen_ratio_p(self):
+        pr = gd.isen_ratio_p(1.4, 1.0)
+        self.assertAlmostEqual(pr, 1.2**(1.4/(1.4-1)), 4)
+
+    def test_isen_ratio_rho(self):
+        pr = gd.isen_ratio_rho(1.4, 1.0)
+        self.assertAlmostEqual(pr, 1.2**(1/(1.4-1)), 4)
+
 
 if __name__ == '__main__':
     unittest.main()
