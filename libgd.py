@@ -13,6 +13,12 @@ def my_sign(x):
     elif x == 0: return  0
     else:        return  1
 
+def rad2deg(theta_rad):
+    return theta_rad*180/m.pi
+
+def deg2rad(theta_deg):
+    return theta_deg*m.pi/180
+
 class Gas:
     def __init__(self, name="AIR", M=28.97, k=1.4, R=287, cp=1000, cv=716, isSI=True):
         self.name = name
@@ -261,35 +267,35 @@ def choked_mdot(Pt:float, Tt:float, Astar, g:Gas):
     moa = Astar*Pt/m.sqrt(Tt) * C
     return moa 
 
-def norm_shock_m2(M1, k):
+def norm_shock_m2(M1, k=1.4):
     numer = M1**2 + 2/(k-1)
     denom = 2*k/(k-1)*M1**2 - 1
     M2 = m.sqrt(numer/denom)
     return M2
 
-def norm_shock_m1(M2, k, lo=1, hi=5):
+def norm_shock_m1(M2, k=1.4, lo=1, hi=5):
 
     M2 = bisector(lambda x: norm_shock_m2(x,k) - M2, lo, hi)
     return M2
 
-def norm_shock_pr(M1, k):
+def norm_shock_pr(M1, k=1.4):
     PR = 2*k/(k+1)*M1**2 - (k-1)/(k+1)
     return PR
 
-def norm_shock_tr(M1, k):
+def norm_shock_tr(M1, k=1.4):
     M2 = norm_shock_m2(M1, k)
     ttot1 = isen_ratio_t(k, M1)
     ttot2 = isen_ratio_t(k, M2)
     TR = ttot1/ttot2
     return TR
 
-def norm_shock_rr(M1, k):
+def norm_shock_rr(M1, k=1.4):
     numer = (k+1)*M1**2
     denom = (k-1)*M1**2 + 2
     rho2orho1 = numer/denom
     return rho2orho1
 
-def norm_shock_ptr(M1, k):
+def norm_shock_ptr(M1, k=1.4):
     '''
     total pressure ratio across normal shock
     * ptr = Pt2 / Pt1
@@ -301,7 +307,7 @@ def norm_shock_ptr(M1, k):
     ptr = A**C1 * B**C2
     return ptr
 
-def norm_shock_dvoa(M1: float, k:float) -> float:
+def norm_shock_dvoa(M1: float, k:float =1.4) -> float:
     '''
     dvoa = (V1 - V2)/a1
     returns velocity delta relative to incoming speed of sound
@@ -353,8 +359,8 @@ def zero_ob_beta(theta, beta, M1, k):
 def oblique_beta_zero(M, theta, k=1.4):
     '''
     Get oblique shock angle "BETA"
-    M = incoming mach number
-    theta = deflection angle 
+    * M = incoming mach number
+    * theta = deflection angle 
     '''
 
     betas = np.arange(0.0001,m.pi/3,0.0001)
@@ -403,15 +409,137 @@ def oblique_ratio_rho(M1, theta, k=1.4):
     return rr
 
 def oblique_ratio_p(M1, theta, k=1.4):
+    '''
+    P2/P1 across oblique shock
+    * M1    = incoming Mach number
+    * theta = deflection angle
+    '''
 
     beta = oblique_beta_zero(M1,theta, k)
     pr = 1 + 2*k/(k+1)*(M1**2*m.sin(beta)**2 - 1)
     return pr
 
+def oblique_ratio_pt(M1, delta, k=1.4):
+    '''
+    Pt1/Pt0 total pressure ratio
+    * M1    = incoming mach number
+    * delta = deflection angle
+    '''
+    beta = oblique_beta_zero(M1,delta, k)
+
+    MS = M1**2*m.sin(beta)**2
+
+    E1 = k/(k-1)
+    E2 = 1/(1-k)
+
+    A = (k+1)/2*MS
+    B = 1+(k-1)/2*MS
+    C = 2*k/(k+1)*MS-(k-1)/(k+1)
+
+    ptr = (A/B)**E1 * (C)**E2
+
+    return ptr
+
+def oblique_ratio_pt_theta(M1, theta, k=1.4):
+    '''
+    Pt2/Pt1 oblique shock pressure ratio
+
+    * M1: incoming mach number
+    * theta: shock angle
+    '''
+    MS = M1**2*m.sin(theta)**2
+
+    E1 = k/(k-1)
+    E2 = 1/(1-k)
+
+    A = (k+1)/2*MS
+    B = 1+(k-1)/2*MS
+    C = 2*k/(k+1)*MS-(k-1)/(k+1)
+
+    ptr = (A/B)**E1 * (C)**E2
+
+    return ptr
+
+
+
 def oblique_ratio_t(M1, theta, k=1.4):
+    '''
+    T2/T1 across oblique shock
+    * M1    = incoming Mach number
+    * theta = deflection angle
+    '''
 
     beta = oblique_beta_zero(M1, theta, k)
     tr = 1 + 2*(k-1)/(k+1)**2*(k*M1**2*m.sin(beta)**2 + 1)/(M1**2*m.sin(beta)**2)*(M1**2*m.sin(beta)**2-1)
     return tr
 
 
+def oblique_m1(delta, theta):
+    '''
+    M1    = incoming Mach number
+    delta = deflection angle
+    theta = shock      angle
+    '''
+
+    d = delta
+    th = theta
+
+    L = lambda M1: m.tan(d) - (2/m.tan(th))*(M1**2*m.sin(th)**2-1)/( M1**2*(1.4+m.cos(2*th))   + 2)
+
+    M = bisector(L, 1, 10)
+    return M
+
+def oblique_theta(M1, PR, k=1.4):
+    '''
+    get shock angle
+    * M1 = incoming mach number
+    * PR = pressure ratio across shock
+    '''
+
+    f = lambda beta: 1 + 2*k/(k+1)*(M1**2*m.sin(beta)**2 - 1) - PR
+
+    b = bisector(f, 0, m.pi/2, 1e-4)
+    return b
+
+def oblique_delta(M1, theta):
+    '''
+    Find oblique shock turn angle
+    * M1 incoming mach number
+    * theta shock angle
+    '''
+    th = theta
+    k = 1.4
+    numer = M1**2*m.sin(th)**2 - 1
+    denom = M1**2*(k+m.cos(2*th)) + 2
+    RHS = 2/m.tan(th)*numer/denom
+
+    f = lambda d: m.tan(d) - RHS
+
+    delta = bisector(f, 0, m.pi/2, 1e-4)
+        
+    return delta
+
+def oblique_shock_relations(M1:float, turn_angle:float, k=1.4) -> Tuple[float, float, float, float, float, float, float]:
+    '''
+    get: beta_deg, M2, PR, TR, PTR, M1n, M2n
+    '''
+
+    beta_rad = oblique_beta_zero(M1, turn_angle, k)
+    beta_deg = rad2deg(beta_rad)
+    M2 = oblique_m2(M1, turn_angle, k)
+    PR = oblique_ratio_p(M1, turn_angle, k)
+    TR = oblique_ratio_t(M1, turn_angle, k)
+    PTR = oblique_ratio_pt(M1, turn_angle, k)
+    M1n = M1*m.sin(beta_rad)
+    M2n = norm_shock_m2(M1n, k)
+
+    return beta_deg, M2, PR, TR, PTR, M1n, M2n
+
+def norm_shock_relations(M1, k=1.4):
+
+    M2   = norm_shock_m2(  M1, k)
+    PR2  = norm_shock_pr(  M1, k)
+    TR2  = norm_shock_tr(  M1, k)
+    PTR2 = norm_shock_ptr( M1, k)
+
+    return M2, PR2, TR2, PTR2
