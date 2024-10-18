@@ -168,7 +168,7 @@ def p713():
     print_var("ds2 [Btu/lbm-R]", ds2)
     print_var("dst [Btu/lbm-R]", dstot)
 
-    Tt0 = isen_ratio_t(g.k, M0)*T0
+    Tt0 = isen_ratio_t(M0, g.k)*T0
     s0 = 0
 
     PTRa = PTR2*PTR1
@@ -342,7 +342,7 @@ P3 = pr23*P2
 # d)
 # T2, P2, M2 if pt2 = 71 psia
 pt2 = 71
-ptop1 = isen_ratio_p(1.4, M1)
+ptop1 = isen_ratio_p(M1, 1.4)
 pt1 = ptop1*P1
 print(f"pt1 = {pt1:10.2f}")
 ptr = pt2/pt1

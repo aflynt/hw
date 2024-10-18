@@ -2,9 +2,9 @@ from libgd import *
 print("\n")
 
 #g = gases_ee["NITROGEN"]
-g = gases_ee["OXYGEN"]
 
 
+g = Gas_mgr().OXYGEN_EE
 # KNOWN
 # Tt = constant
 # no work
@@ -20,8 +20,8 @@ V_1 = 639 # ft/s
 a_1 = gas_sos(T_1, g)
 M_1 = V_1 / a_1
 
-TR_1 = isen_ratio_t(g.k, M_1)
-PR_1 = isen_ratio_p(g.k, M_1)
+TR_1 = isen_ratio_t(M_1,g.k)
+PR_1 = isen_ratio_p(M_1,g.k)
 
 Tt_1 = T_1 * TR_1
 Pt_1 = P_1 * PR_1
@@ -37,8 +37,8 @@ as1oas2 = 1
 aoas_2 = (A_2/A_1)*aoas_1*as1oas2
 
 M_2,_ = get_mach_given_aoastar(aoas_2, g.k)
-ptop = isen_ratio_p(g.k, M_2)
-ttop = isen_ratio_t(g.k, M_2)
+ptop = isen_ratio_p(M_2,g.k)
+ttop = isen_ratio_t(M_2, g.k)
 
 PR = 1/ptop
 TR = 1/ttop

@@ -1,7 +1,7 @@
 from libgd import *
 
 # Gas: AIR EE
-g = gases_ee["AIR"]
+g = Gas_mgr().AIR_EE
 USING_SI = False
 
 g_c = 1 if USING_SI else 32.174
@@ -22,8 +22,8 @@ print(f"a_1 = {a_1:10.3f} ft/s")
 print(f"u_1 = {V_1:10.3f} ft/s")
 
 # with M we get TR, PR
-TR_1 = isen_ratio_t(g.k,M_1)
-PR_1 = isen_ratio_p(g.k,M_1)
+TR_1 = isen_ratio_t(M_1,g.k)
+PR_1 = isen_ratio_p(M_1,g.k)
 
 Tt_1 = T_1*TR_1
 Pt_1 = P_1*PR_1
@@ -31,8 +31,8 @@ Pt_1 = P_1*PR_1
 # energy balance with no heat transfer or work -> Tt = constant
 Tt_2 = Tt_1
 
-TR_2 = isen_ratio_t(g.k, M_2)
-PR_2 = isen_ratio_p(g.k, M_2)
+TR_2 = isen_ratio_t(M_2, g.k)
+PR_2 = isen_ratio_p(M_2,g.k)
 
 T_2 = Tt_2 / TR_2
 

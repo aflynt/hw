@@ -15,7 +15,7 @@ The following information is known about the steady flow of air through an adiab
 # ->-> Tt = constant
 # no losses? -> NO
 
-g = gases_ee["AIR"]
+g = Gas_mgr().AIR_EE
 
 #•	At section 1, 
 T1 = 556  # R
@@ -30,7 +30,7 @@ p2  = 18 # psia
 a2 = gas_sos(T2, g)
 TR2 = Tt2/T2
 M2 = get_mach_given_tr(TR2, g) #__
-PR2 = isen_ratio_p(g.k, M2)
+PR2 = isen_ratio_p(M2,g.k)
 V2 = M2*a2 #__
 Pt2 = PR2*p2 #__
 
@@ -39,7 +39,7 @@ Tt1 = Tt2
 
 TR1 = Tt1/T1
 M1 = get_mach_given_tr(TR1, g)
-PR1 = isen_ratio_p(g.k, M1)
+PR1 = isen_ratio_p(M1,g.k)
 Pt1 = PR1*p1
 a1 = gas_sos(T1, g)
 V1 = M1*a1
@@ -75,8 +75,8 @@ def other():
     a_1 = gas_sos(T_1, g)
     M_1 = V_1 / a_1
     
-    TR_1 = isen_ratio_t(g.k, M_1)
-    PR_1 = isen_ratio_p(g.k, M_1)
+    TR_1 = isen_ratio_t(M_1, g.k)
+    PR_1 = isen_ratio_p(M_1,g.k)
     
     Tt_1 = T_1 * TR_1
     Pt_1 = P_1 * PR_1
@@ -88,8 +88,8 @@ def other():
     aoas_2 = (A_2/A_1)*aoas_1*as1oas2
     
     M_2,_ = get_mach_given_aoastar(aoas_2, g.k)
-    ptop = isen_ratio_p(g.k, M_2)
-    ttop = isen_ratio_t(g.k, M_2)
+    ptop = isen_ratio_p(M_2,g.k)
+    ttop = isen_ratio_t(M_2, g.k)
     
     PR = 1/ptop
     TR = 1/ttop

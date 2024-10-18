@@ -27,15 +27,15 @@ def ex701():
     V2 = Vs - V2p # actual velocity after shock
     M2 = V2/a2p
 
-    pr2  = isen_ratio_p(g.k, M2)
+    pr2  = isen_ratio_p(M2, g.k)
 
     pt1 = P1
     pt2 = pr2*P2p # total pressure post-shock
     ds = ds_given_dpt(pt2, pt1, g.R, False)
     print_var("ds", ds)
 
-    pr1p = isen_ratio_p(g.k, M1p)
-    pr2p = isen_ratio_p(g.k, M2p)
+    pr1p = isen_ratio_p(M1p, g.k)
+    pr2p = isen_ratio_p(M2p, g.k)
     pt1p = pr1p*P1
     pt2p = pr2p*P2p
 
@@ -86,13 +86,13 @@ def ex_known_shock_speed():
     V2 = Vs - V2p # actual velocity after shock
     M2 = V2/a2p
 
-    TR2   = isen_ratio_t(g.k, M2)
+    TR2   = isen_ratio_t(M2,g.k)
     Tt2 = TR2*T2p # total pressure post-shock
 
-    TR2p  = isen_ratio_t(g.k, M2p)
+    TR2p  = isen_ratio_t(M2p,g.k)
     Tt2p  = TR2p*T2p
 
-    TR1p  = isen_ratio_t(g.k, M1p)
+    TR1p  = isen_ratio_t(M1p,g.k)
     Tt1p  = TR1p*T1p
 
     rho1 = P1/(g.R*T1)

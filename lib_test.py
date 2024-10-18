@@ -140,16 +140,50 @@ class TestObliques(unittest.TestCase):
 
 class Test_isentropics(unittest.TestCase):
     def test_isen_ratio_t(self):
-        tr = gd.isen_ratio_t(1.4, 1.0)
+        tr = gd.isen_ratio_t( 1.0, 1.4)
         self.assertAlmostEqual(tr, 1.2, 4)
 
     def test_isen_ratio_p(self):
-        pr = gd.isen_ratio_p(1.4, 1.0)
+        pr = gd.isen_ratio_p( 1.0, 1.4)
         self.assertAlmostEqual(pr, 1.2**(1.4/(1.4-1)), 4)
 
     def test_isen_ratio_rho(self):
-        pr = gd.isen_ratio_rho(1.4, 1.0)
+        pr = gd.isen_ratio_rho( 1.0, 1.4)
         self.assertAlmostEqual(pr, 1.2**(1/(1.4-1)), 4)
+
+class Test_PM(unittest.TestCase):
+    def test_pm_angle1(self):
+        M = 2.00
+        nu_table = 26.37976 # degrees
+        nu_func = gd.isen_pm_nu(M)
+        self.assertAlmostEqual(nu_func, nu_table, 5)
+
+    def test_pm_angle2(self):
+        M = 2.10
+        nu_table = 29.09708 # degrees
+        nu_func = gd.isen_pm_nu(M)
+        self.assertAlmostEqual(nu_func, nu_table, 5)
+
+    def test_pm_mach_1(self):
+        nu_angle = 28.01973 # deg
+        M_table = 2.06 
+        M_func  = gd.isen_pm_M(nu_angle)
+        self.assertAlmostEqual(M_table, M_func, 5)
+
+    def test_pm_mach_2(self):
+        nu_angle = 20.0 + 20.05026 # deg
+        M_table = 2.54 
+        M_func  = gd.isen_pm_M(nu_angle)
+        self.assertAlmostEqual(M_table, M_func, 4)
+    
+    def test_pm_compression(self):
+        M1 = 2.4
+        nu_1 = gd.isen_pm_nu(M1)
+        dnu = -20
+        nu_2 = nu_1 + dnu
+        M2 = gd.isen_pm_M(nu_2)
+        M2_true = 1.6638565212488174
+        self.assertAlmostEqual(M2_true, M2, 3)
 
 
 if __name__ == '__main__':

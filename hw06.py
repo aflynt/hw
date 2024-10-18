@@ -39,7 +39,7 @@ def prob_605():
     Pt1oPt2 = 1
 
     M2 = norm_shock_m1(M3, g.k)
-    pr2 = isen_ratio_p(g.k, M2)
+    pr2 = isen_ratio_p(M2,g.k)
     aoas2 = aoastar(g.k, M2)
     print(f" found M2 = {M2:.6f}")
     print(f"{pr2 =}")
@@ -68,14 +68,14 @@ def prob_606():
     M2 = norm_shock_m2(M1, k)
     T2oT1 = norm_shock_tr(M1, k)
 
-    TR2 = isen_ratio_t(k, M2)
+    TR2 = isen_ratio_t(M2,k)
     aoas2 = aoastar(k, M2)
 
     aoas3 = A3/A2*aoas2*1
 
     M3,_ = get_mach_given_aoastar(aoas3, k)
 
-    TR3 = isen_ratio_t(k, M3)
+    TR3 = isen_ratio_t(M3,k)
 
     T3oT1 = (1/TR3)*(1)*TR2*T2oT1
 
@@ -96,12 +96,12 @@ def prob_607():
     k = g.k
 
     # CRITICAL PT 3: supersonic exit
-    pr3 = 1/isen_ratio_p(k, Me)
+    pr3 = 1/isen_ratio_p(Me,k)
     aoas3 = aoastar(k, Me)
 
     # CRITICAL PT 1: subsonic exit
     M1,_ = get_mach_given_aoastar(aoas3, k)
-    pr1   = 1/isen_ratio_p(k, M1)
+    pr1   = 1/isen_ratio_p(M1,k)
 
     # CRITICAL PT 2: shock at exit
     prs = norm_shock_pr(Me, k)
@@ -143,7 +143,7 @@ def prob_609():
     k = g.k
     R = g.R
 
-    p1opt1 = 1/isen_ratio_p(k, M1)
+    p1opt1 = 1/isen_ratio_p(M1,k)
     aoastar1 = aoastar(k,M1)
 
 def prob_615():
@@ -158,8 +158,8 @@ def prob_615():
     M_sub, M_sup = get_mach_given_aoastar(AR_design, k)
 
     # PR for 1st and 3rd critical point
-    popt1 = 1/isen_ratio_p(k, M_sub)
-    popt3 = 1/isen_ratio_p(k, M_sup)
+    popt1 = 1/isen_ratio_p(M_sub,k)
+    popt3 = 1/isen_ratio_p(M_sup,k)
 
     # PR for 2nd critical point
     pr_shock = norm_shock_pr(M_sup, k)
@@ -170,7 +170,7 @@ def prob_615():
     M_outlet = mach_given_ar_pr(AR_design, PR_op, k)
 
     # c) shock location & Mshock
-    popt5 = 1/isen_ratio_p(k, M_outlet)
+    popt5 = 1/isen_ratio_p(M_outlet,k)
     pt5opt1 = PR_op/popt5
 
     mshock = mach_given_ptr(pt5opt1, k)

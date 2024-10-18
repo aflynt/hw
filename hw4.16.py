@@ -1,7 +1,7 @@
 from libgd import *
 
-g = gases_ee["OXYGEN"]
 
+g = Gas_mgr().OXYGEN_EE
 # known
 M_1 = 0.2    
 Tt_1 = 1000  # R
@@ -9,8 +9,8 @@ Pt_1 = 100   # psia
 A_1 = 1   # ft^2
 P_2 = 14.7   # psia
 
-TR_1 = isen_ratio_t(g.k, M_1)
-PR_1 = isen_ratio_p(g.k, M_1)
+TR_1 = isen_ratio_t(M_1,g.k)
+PR_1 = isen_ratio_p(M_1,g.k)
 T_1 = Tt_1 / TR_1
 P_1 = Pt_1 / PR_1
 
@@ -23,11 +23,12 @@ Pt_2 = Pt_1
 
 PR_2 = Pt_2/P_2
 
+import sympy as sp
 M = sp.Symbol("M")
 
 M_2 = get_mach_given_pr( PR_2, g)
 
-TR_2 = isen_ratio_t(g.k, M_2)
+TR_2 = isen_ratio_t(M_2,g.k)
 
 Tt_2 = Tt_1
 T_2 = Tt_2/ TR_2

@@ -1,7 +1,7 @@
 from libgd import *
 
 # Gas:
-g = gases_si["CARBON_DIOXIDE"]
+g = Gas_mgr().CARBON_DIOXIDE_SI
 USING_SI = True
 
 g_c = 1 if USING_SI else 32.174
@@ -17,8 +17,8 @@ P_2 = 4*101325 # Pa
 
 
 # Can get station 2 ratios
-TR_2 = isen_ratio_t(g.k, M_2)
-PR_2 = isen_ratio_p(g.k, M_2)
+TR_2 = isen_ratio_t(M_2, g.k)
+PR_2 = isen_ratio_p(M_2,g.k)
 
 Tt_2 = TR_2*T_2
 print(f"TR_2 = {TR_2:10.3f}")
@@ -30,6 +30,7 @@ Tt_1 = Tt_2
 TR_1 = Tt_1 / T_1
 print(f"TR_1 = {TR_1:10.3f}")
 
+import sympy as sp
 M = sp.Symbol("M")
 
 # Find station 1 Mach number
@@ -56,8 +57,8 @@ print(f"Area Ratio A2/A1 = {AreaRatio21:10.3f}")
 #print(f"u_1 = {V_1:10.3f} ft/s")
 
 ## with M we get TR, PR
-#TR_1 = isen_ratio_t(g.k,M_1)
-#PR_1 = isen_ratio_p(g.k,M_1)
+#TR_1 = isen_ratio_t(M_1,g.k)
+#PR_1 = isen_ratio_p(M_1,g.k)
 #
 #Tt_1 = T_1*TR_1
 #Pt_1 = P_1*PR_1

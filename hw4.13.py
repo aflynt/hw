@@ -1,6 +1,6 @@
 from libgd import *
 
-g = gases["METHANE"]
+g = Gas_mgr().METHANE_SI
 R  = g.R
 k  = g.k
 
@@ -15,8 +15,8 @@ a1 = speed_of_sound(k,R,T1)
 M1 = V1/a1
 
 # with M we get TR, PR
-TR1 = isen_ratio_t(k,M1)
-PR1 = isen_ratio_p(k,M1)
+TR1 = isen_ratio_t(M1,k)
+PR1 = isen_ratio_p(M1,k)
 
 # now get Pt Tt
 Tt1 = T1*TR1
@@ -31,8 +31,8 @@ Pt2 = Pt1
 
 # we know mach 2
 M2 = 0.8
-TR2 = isen_ratio_t(k,M2)
-PR2 = isen_ratio_p(k,M2)
+TR2 = isen_ratio_t(M2,k)
+PR2 = isen_ratio_p(M2,k)
 
 # now get static values
 T2 = Tt2/TR2

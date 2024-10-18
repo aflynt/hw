@@ -1,6 +1,6 @@
 from libgd import *
 
-g_air = gases["AIR"]
+g_air = Gas_mgr().AIR_SI
 
 print(f" given air:")
 cp = g_air.cp

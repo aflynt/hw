@@ -13,7 +13,7 @@ adiabatic system  -> q=0
 no work -> Tt = constant
 """
 # ----------------------------------------------
-g = gases_si["AIR"]
+g = Gas_mgr().AIR_SI
 # ----------------------------------------------
 # Given station data
 D1 = 0.150 # m

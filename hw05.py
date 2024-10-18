@@ -27,7 +27,7 @@ def cq_10():
 
     Pt = 500e3 # Pa
     Tt = 300   # K
-    g = gases_si["AIR"]
+    g = Gas_mgr().AIR_SI
 
     #moa = max_mdot_o_astar(Pt, Tt, g)
     mdot_max = choked_mdot(Pt, Tt, astar, g)
@@ -66,7 +66,7 @@ def prob_5_11():
     print(f"PR = {PR_2:12.6f}")
     print(f"M2 = {M2:12.6f}")
 
-    TR_2 = isen_ratio_t(g.k, M2)
+    TR_2 = isen_ratio_t(M2,g.k)
     inv_TR = 1/TR_2
     print(f"{inv_TR = }")
     T2 = Tt2 / TR_2
@@ -117,8 +117,8 @@ def prob_5_16():
     mdot1 = rho1*V1*A1 # lbm/s
     print(f"mdot1 = {mdot1:12.3f}")
 
-    PR_1 = isen_ratio_p(g.k, M1)
-    TR_1 = isen_ratio_t(g.k, M1)
+    PR_1 = isen_ratio_p(M1,g.k)
+    TR_1 = isen_ratio_t(M1,g.k)
 
     aoas_1 = aoastar(g.k, M1)
 
@@ -151,12 +151,12 @@ def prob_5_18():
     # isentropic/ ideal M2
     PR_2 = Pt_2/P_2
     M_2s  = get_mach_given_pr(PR_2, g)
-    TR_2s = isen_ratio_t(g.k, M_2s)
+    TR_2s = isen_ratio_t(M_2s,g.k)
     T_2s = Tt_2 / TR_2s
 
     # actual M2
     M_2 = 1.6
-    TR_2 = isen_ratio_t(g.k, M_2)
+    TR_2 = isen_ratio_t(M_2,g.k)
     T_2 = Tt_2/TR_2
 
     # efficiency and entropy

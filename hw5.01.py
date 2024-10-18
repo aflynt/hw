@@ -1,8 +1,8 @@
 from libgd import *
 
-g = gases_ee["NITROGEN"]
 
 
+g = Gas_mgr().NITROGEN_EE
 # known
 # Tt = constant
 # no work
@@ -19,14 +19,14 @@ def do_part_a():
 
     # know state 1
     aoas_1 = aoastar(g.k, M_1)
-    PR_1 = isen_ratio_p(g.k, M_1)
+    PR_1 = isen_ratio_p(M_1,g.k)
 
     # get A/A* at 2
     aoas_2 = A2/A1 * aoas_1 * as1oas2
 
     # subsonic at 1, with expanding area -> subsonic at 2
     M_2, _ = get_mach_given_aoastar(aoas_2, g.k)
-    PR_2 = isen_ratio_p(g.k, M_2)
+    PR_2 = isen_ratio_p(M_2,g.k)
 
     print(f"A/A*_1: {aoas_1:10.3f}")
     print(f"A/A*_2 = {aoas_2:10.3f}")
@@ -47,7 +47,7 @@ def do_part_b():
     as1oas2 = 1
     
     # know state 1
-    TR_1 = isen_ratio_t(g.k, M_1)
+    TR_1 = isen_ratio_t(M_1,g.k)
     aoas_1 = aoastar(g.k, M_1)
 
     # get A/A* at 2
@@ -55,7 +55,7 @@ def do_part_b():
 
     # ss at 1, with expanding area -> ss at 2
     _, M_2 = get_mach_given_aoastar(aoas_2, g.k)
-    TR_2 = isen_ratio_t(g.k, M_2)
+    TR_2 = isen_ratio_t(M_2,g.k)
 
     T_2 = 1/TR_2*1*TR_1* T_1
     print(f"A/A*_1: {aoas_1:10.3f}")
