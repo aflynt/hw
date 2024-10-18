@@ -109,48 +109,48 @@ class Gas_mgr:
     def get_gas_OXYGEN(self):         return self.gases["OXYGEN"]
     def get_gas_WATER(self):          return self.gases["WATER"]
 
-gases_si = {
-    "AIR":            Gas("AIR",             28.97 , 1.40,  287,  1000,  716),
-    "AMMONIA":        Gas("AMMONIA",         17.03 , 1.32,  488,  2175, 1648),
-    "ARGON":          Gas("ARGON",           39.94 , 1.67,  208,   519,  310),
-    "CARBON_DIOXIDE": Gas("CARBON_DIOXIDE",  44.01 , 1.29,  189,   850,  657),
-    "CARBON_MONOXIDE":Gas("CARBON_MONOXIDE", 28.01 , 1.40,  297,  1040,  741),
-    "HELIUM":         Gas("HELIUM",           4.00 , 1.67, 2080,  5230, 3140),
-    "HYDROGEN":       Gas("HYDROGEN",         2.02 , 1.41, 4120, 14300,10200),
-    "METHANE":        Gas("METHANE",         16.04 , 1.32,  519,  2230, 1690),
-    "NITROGEN":       Gas("NITROGEN",        28.02 , 1.40,  296,  1040,  741),
-    "OXYGEN":         Gas("OXYGEN",          32.00 , 1.40,  260,   913,  653),
-    "WATER":          Gas("WATER",           18.02 , 1.33,  461,  1860, 1400),
-}
+#gases_si = {
+#    "AIR":            Gas("AIR",             28.97 , 1.40,  287,  1000,  716),
+#    "AMMONIA":        Gas("AMMONIA",         17.03 , 1.32,  488,  2175, 1648),
+#    "ARGON":          Gas("ARGON",           39.94 , 1.67,  208,   519,  310),
+#    "CARBON_DIOXIDE": Gas("CARBON_DIOXIDE",  44.01 , 1.29,  189,   850,  657),
+#    "CARBON_MONOXIDE":Gas("CARBON_MONOXIDE", 28.01 , 1.40,  297,  1040,  741),
+#    "HELIUM":         Gas("HELIUM",           4.00 , 1.67, 2080,  5230, 3140),
+#    "HYDROGEN":       Gas("HYDROGEN",         2.02 , 1.41, 4120, 14300,10200),
+#    "METHANE":        Gas("METHANE",         16.04 , 1.32,  519,  2230, 1690),
+#    "NITROGEN":       Gas("NITROGEN",        28.02 , 1.40,  296,  1040,  741),
+#    "OXYGEN":         Gas("OXYGEN",          32.00 , 1.40,  260,   913,  653),
+#    "WATER":          Gas("WATER",           18.02 , 1.33,  461,  1860, 1400),
+#}
+#
+#gases_ee = {
+#    "AIR":            Gas("AIR",             28.97 , 1.40, 53.3, 0.240,0.171, isSI=False),
+#    "AMMONIA":        Gas("AMMONIA",         28.97 , 1.40, 53.3, 0.240,0.171, isSI=False),
+#    "ARGON":          Gas("ARGON",           39.94 , 1.67, 38.7, 0.124,0.074, isSI=False),
+#    "CARBON_DIOXIDE": Gas("CARBON_DIOXIDE",  44.01 , 1.29, 35.1, 0.203,0.157, isSI=False),
+#    "CARBON_MONOXIDE":Gas("CARBON_MONOXIDE", 28.01 , 1.40, 55.2, 0.248,0.177, isSI=False),
+#    "HELIUM":         Gas("HELIUM",           4.00 , 1.67,  386, 1.250,0.750, isSI=False),
+#    "HYDROGEN":       Gas("HYDROGEN",         2.02 , 1.41,  766, 3.420,2.430, isSI=False),
+#    "METHANE":        Gas("METHANE",         16.04 , 1.32, 96.4, 0.532,0.403, isSI=False),
+#    "NITROGEN":       Gas("NITROGEN",        28.02 , 1.40, 55.1, 0.248,0.177, isSI=False),
+#    "OXYGEN":         Gas("OXYGEN",          32.00 , 1.40, 48.3, 0.218,0.156, isSI=False),
+#    "WATER":          Gas("WATER",           18.02 , 1.33, 85.7, 0.445,0.335, isSI=False),
+#}
 
-gases_ee = {
-    "AIR":            Gas("AIR",             28.97 , 1.40, 53.3, 0.240,0.171, isSI=False),
-    "AMMONIA":        Gas("AMMONIA",         28.97 , 1.40, 53.3, 0.240,0.171, isSI=False),
-    "ARGON":          Gas("ARGON",           39.94 , 1.67, 38.7, 0.124,0.074, isSI=False),
-    "CARBON_DIOXIDE": Gas("CARBON_DIOXIDE",  44.01 , 1.29, 35.1, 0.203,0.157, isSI=False),
-    "CARBON_MONOXIDE":Gas("CARBON_MONOXIDE", 28.01 , 1.40, 55.2, 0.248,0.177, isSI=False),
-    "HELIUM":         Gas("HELIUM",           4.00 , 1.67,  386, 1.250,0.750, isSI=False),
-    "HYDROGEN":       Gas("HYDROGEN",         2.02 , 1.41,  766, 3.420,2.430, isSI=False),
-    "METHANE":        Gas("METHANE",         16.04 , 1.32, 96.4, 0.532,0.403, isSI=False),
-    "NITROGEN":       Gas("NITROGEN",        28.02 , 1.40, 55.1, 0.248,0.177, isSI=False),
-    "OXYGEN":         Gas("OXYGEN",          32.00 , 1.40, 48.3, 0.218,0.156, isSI=False),
-    "WATER":          Gas("WATER",           18.02 , 1.33, 85.7, 0.445,0.335, isSI=False),
-}
-
-def isen_ratio_t(k:float, M:float):
+def isen_ratio_t(M:float, k=1.4):
    '''
    Isentropic temp ratio of total/static
    '''
    TR = (1 + (k-1)/2*M**2)
    return TR
 
-def isen_ratio_p(k: float,M: float):
-   TR = isen_ratio_t(k,M)
+def isen_ratio_p(M: float, k=1.4):
+   TR = isen_ratio_t(M, k)
    PR = TR**(k/(k-1))
    return PR
 
-def isen_ratio_rho(k: float, M: float):
-    TR = isen_ratio_t(k, M)
+def isen_ratio_rho(M: float, k=1.4):
+    TR = isen_ratio_t(M, k)
     RR = TR**(1/(k-1))
     return RR
 
@@ -184,8 +184,8 @@ def nohw_T2oT1(M1, M2, k):
     # steady 1D flow of perfect gas
     # conservation of mass, q = 0, w = 0, dz = 0
     # Tt1 = Tt2 = constant
-    TR1 = isen_ratio_t(k, M1)
-    TR2 = isen_ratio_t(k, M2)
+    TR1 = isen_ratio_t(M1, k)
+    TR2 = isen_ratio_t(M2, k)
 
     T2oT1 = TR1/TR2
     return T2oT1
@@ -193,8 +193,8 @@ def nohw_T2oT1(M1, M2, k):
 def nohw_Pt2oPt1_given_Ms(p2, p1, k, M1, M2):
     # ok if: Tt1 == Tt2
     PR = p2/p1
-    TR2 = isen_ratio_t(k,M2)
-    TR1 = isen_ratio_t(k,M1)
+    TR2 = isen_ratio_t(M2, k)
+    TR1 = isen_ratio_t(M1, k)
     sup = k / (k-1)
     Pt2oPt1 = PR * (TR2/TR1)**sup
     return Pt2oPt1
@@ -221,7 +221,7 @@ def aoastar(k, M):
     - isentropic A/A*
     - returns one unique area ratio A/A*
     '''
-    TR  = isen_ratio_t(k,M)
+    TR  = isen_ratio_t(M,k)
     sup = (k+1)/(2*(k-1))
     C   = (k+1)/2
     aoas = 1/M*(TR/C)**sup
@@ -254,8 +254,8 @@ def bisector(f, a, b, tol=1e-6):
 
 def A2oA1_given_MR_ds(M1:float, M2:float, ds:float, g:Gas):
 
-    TR1 = isen_ratio_t(g.k, M1)
-    TR2 = isen_ratio_t(g.k, M2)
+    TR1 = isen_ratio_t(M1, g.k)
+    TR2 = isen_ratio_t(M2, g.k)
     
     A2oA1 = M1/M2*(TR2/TR1)**((g.k+1)/(2*(g.k-1)))*m.exp(ds/g.R)
 
@@ -284,8 +284,8 @@ def norm_shock_pr(M1, k=1.4):
 
 def norm_shock_tr(M1, k=1.4):
     M2 = norm_shock_m2(M1, k)
-    ttot1 = isen_ratio_t(k, M1)
-    ttot2 = isen_ratio_t(k, M2)
+    ttot1 = isen_ratio_t(M1, k)
+    ttot2 = isen_ratio_t(M2, k)
     TR = ttot1/ttot2
     return TR
 
@@ -302,7 +302,7 @@ def norm_shock_ptr(M1, k=1.4):
     '''
     C1 = k/(k-1)
     C2 = 1/(1-k)
-    A  = (k+1)/2*M1**2 / isen_ratio_t(k,M1)
+    A  = (k+1)/2*M1**2 / isen_ratio_t(M1,k)
     B  = 2*k/(k+1)*M1**2 - (k-1)/(k+1)
     ptr = A**C1 * B**C2
     return ptr
@@ -327,7 +327,7 @@ def mach_given_ar_pr(ar:float, pr:float, k=1.4, M_lo=0.01, M_hi=1.0) -> float:
 
     AR_PR = ar*pr
 
-    fzero = lambda M: aoastar(k, M)/isen_ratio_p(k, M) - AR_PR
+    fzero = lambda M: aoastar(k, M)/isen_ratio_p(M,k) - AR_PR
 
     Mexit = bisector(fzero, M_lo, M_hi)
 
@@ -543,3 +543,33 @@ def norm_shock_relations(M1, k=1.4):
     PTR2 = norm_shock_ptr( M1, k)
 
     return M2, PR2, TR2, PTR2
+
+def isen_pm_nu(M,k=1.4):
+    '''
+    Prandtl-Meyer Flow angle
+    * M = mach number
+    * -> nu [deg]
+    '''
+    kp1 = k + 1
+    km1 = k - 1
+    MM = M**2-1
+    A = m.sqrt(kp1/km1)
+    B = m.atan(m.sqrt(km1/kp1*MM))
+    C = m.atan(m.sqrt(MM))
+
+    nu_rad = A*B - C
+    nu_deg = rad2deg(nu_rad)
+
+    return nu_deg
+
+def isen_pm_M(nu, k=1.4):
+    '''
+    Prandtl-Meyer Mach # given angle
+    * nu: angle [deg]
+    * -> M
+    '''
+
+    L = lambda M: isen_pm_nu(M,k)-nu
+
+    M = bisector(L, 1, 10)
+    return M
