@@ -382,7 +382,7 @@ def oblique_m2(M1, theta, k=1.4):
     '''
     Get oblique shock Mach # behind shock
     * M1    = incoming mach number
-    * theta = deflection angle 
+    * theta = deflection angle [rad]
     '''
 
     beta = oblique_beta_zero(M1,theta, k)
@@ -573,3 +573,18 @@ def isen_pm_M(nu, k=1.4):
 
     M = bisector(L, 1, 10)
     return M
+
+def rotate_points(point_list, angle_deg):
+    '''
+    Rotate list of points about origin
+    '''
+    rpl = []
+    th_rad = angle_deg*m.pi/180
+
+    for xi,yi in point_list:
+        rxi = xi*m.cos(th_rad)-yi*m.sin(th_rad) 
+        ryi = xi*m.sin(th_rad)+yi*m.cos(th_rad) 
+        rpl.append((rxi,ryi))
+    
+    return rpl
+
