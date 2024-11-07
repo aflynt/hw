@@ -109,34 +109,6 @@ class Gas_mgr:
     def get_gas_OXYGEN(self):         return self.gases["OXYGEN"]
     def get_gas_WATER(self):          return self.gases["WATER"]
 
-#gases_si = {
-#    "AIR":            Gas("AIR",             28.97 , 1.40,  287,  1000,  716),
-#    "AMMONIA":        Gas("AMMONIA",         17.03 , 1.32,  488,  2175, 1648),
-#    "ARGON":          Gas("ARGON",           39.94 , 1.67,  208,   519,  310),
-#    "CARBON_DIOXIDE": Gas("CARBON_DIOXIDE",  44.01 , 1.29,  189,   850,  657),
-#    "CARBON_MONOXIDE":Gas("CARBON_MONOXIDE", 28.01 , 1.40,  297,  1040,  741),
-#    "HELIUM":         Gas("HELIUM",           4.00 , 1.67, 2080,  5230, 3140),
-#    "HYDROGEN":       Gas("HYDROGEN",         2.02 , 1.41, 4120, 14300,10200),
-#    "METHANE":        Gas("METHANE",         16.04 , 1.32,  519,  2230, 1690),
-#    "NITROGEN":       Gas("NITROGEN",        28.02 , 1.40,  296,  1040,  741),
-#    "OXYGEN":         Gas("OXYGEN",          32.00 , 1.40,  260,   913,  653),
-#    "WATER":          Gas("WATER",           18.02 , 1.33,  461,  1860, 1400),
-#}
-#
-#gases_ee = {
-#    "AIR":            Gas("AIR",             28.97 , 1.40, 53.3, 0.240,0.171, isSI=False),
-#    "AMMONIA":        Gas("AMMONIA",         28.97 , 1.40, 53.3, 0.240,0.171, isSI=False),
-#    "ARGON":          Gas("ARGON",           39.94 , 1.67, 38.7, 0.124,0.074, isSI=False),
-#    "CARBON_DIOXIDE": Gas("CARBON_DIOXIDE",  44.01 , 1.29, 35.1, 0.203,0.157, isSI=False),
-#    "CARBON_MONOXIDE":Gas("CARBON_MONOXIDE", 28.01 , 1.40, 55.2, 0.248,0.177, isSI=False),
-#    "HELIUM":         Gas("HELIUM",           4.00 , 1.67,  386, 1.250,0.750, isSI=False),
-#    "HYDROGEN":       Gas("HYDROGEN",         2.02 , 1.41,  766, 3.420,2.430, isSI=False),
-#    "METHANE":        Gas("METHANE",         16.04 , 1.32, 96.4, 0.532,0.403, isSI=False),
-#    "NITROGEN":       Gas("NITROGEN",        28.02 , 1.40, 55.1, 0.248,0.177, isSI=False),
-#    "OXYGEN":         Gas("OXYGEN",          32.00 , 1.40, 48.3, 0.218,0.156, isSI=False),
-#    "WATER":          Gas("WATER",           18.02 , 1.33, 85.7, 0.445,0.335, isSI=False),
-#}
-
 def isen_ratio_t(M:float, k=1.4):
    '''
    Isentropic temp ratio of total/static
@@ -588,3 +560,13 @@ def rotate_points(point_list, angle_deg):
     
     return rpl
 
+
+def translate_points(point_list, dx=0, dy=0):
+    tpl = []
+
+    for xi,yi in point_list:
+        txi = xi+dx
+        tyi = yi+dy
+        tpl.append((txi,tyi))
+
+    return tpl
