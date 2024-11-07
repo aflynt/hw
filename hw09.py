@@ -374,7 +374,7 @@ def p812():
 # p814
 
 M1 = 2.0
-g = Gas_mgr().AIR_SI
+g = Gas_mgr().NITROGEN_SI
 P1 = 0.7 # bar
 P2 = 1.0 # bar
 
@@ -402,5 +402,171 @@ print_var("d2", d2*180/m.pi)
 
 M2 = oblique_m2(M1, thA)
 print_var("M2", M2)
+
+thB = thA
+M3 = oblique_m2(M2, thB)
+print_var("M3", M3)
+
+PRB = oblique_ratio_p(M3, thB)
+print_var("PRB", PRB)
+
+P3 = PRB*P2
+
+nu3 = isen_pm_nu(M3)
+print_var("nu3", nu3)
+
+PR3 = isen_ratio_p(M3)
+print_var("PR3", PR3)
+
+Pt3 = PR3*P3
+print_var("Pt3", Pt3)
+
+# PM Expansion C from 3 to 4 to drop pressure to ambient
+PR4 = (1)*PR3*PRB
+print_var("PR4", PR4)
+
+M4 = get_mach_given_pr(PR4, g)
+print_var("M4", M4)
+
+Pt4 = Pt3
+P4 = Pt4/PR4
+print_var("P4", P4)
+
+nu4 = isen_pm_nu(M4)
+print_var("nu4", nu4)
+
+
+dnu = nu4 - nu3
+print_var("dnu", dnu)
+
+
+# %%
+
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, FancyArrowPatch, Polygon
+import numpy as np
+
+
+
+fig,ax = plt.subplots()
+rect = Rectangle((-0.5, -0.5), width=0.5, height=0.5, edgecolor='black', facecolor='grey')
+
+ax.add_patch(rect)
+
+# NOZZLE ARROW
+A1 = [(0, 0), (0.5, 0)]
+A1 = rotate_points(A1, 0)
+A1 = translate_points(A1, -0.5, 0.3)
+a = (FancyArrowPatch(A1[0], A1[1], arrowstyle='-|>', mutation_scale=8, ec='#000000', fc='#000000' ))
+ax.add_patch(a)
+
+# oblique shock A wave
+os_angleA = d2
+LA = 1
+dx = LA*m.cos(os_angleA)
+dy = LA*m.sin(os_angleA)
+print(f"dx = {dx}")
+print(f"dy = {dy}")
+
+ax.plot([0,dx], [0,dy], "--k")
+
+# PLOT CENTERLINE
+ps_centerline = [
+    (0,dy),
+    (2,dy)
+]
+ax.plot([pi for pi,_ in ps_centerline], [pj for _,pj in ps_centerline], "-.b")
+
+
+# region 2 flow
+LB = 1.4
+dx2 = LB*m.cos(thA)
+dy2 = LB*m.sin(thA)
+ax.plot([0,dx2], [0,dy2], ":k")
+
+A2 = [(0, 0), (0.5, 0)]
+A2 = rotate_points(A2, thA*180/m.pi)
+A2 = translate_points(A2, 0.55, 0.3)
+a = (FancyArrowPatch(A2[0],A2[1], arrowstyle='-|>', mutation_scale=8, ec='#000000', fc='#000000' ))
+ax.add_patch(a)
+
+A3 = [(0, 0), (0.5, 0)]
+A3 = rotate_points(A3, 0)
+A3 = translate_points(A3, 1.1, 0.45)
+a = (FancyArrowPatch(A3[0],A3[1], arrowstyle='-|>', mutation_scale=8, ec='#000000', fc='#000000' ))
+ax.add_patch(a)
+
+A4 = [(0, 0), (0.5, 0)]
+A4 = rotate_points(A4, -thA*180/m.pi)
+A4 = translate_points(A4, 1.6, 0.25)
+a = (FancyArrowPatch(A4[0],A4[1], arrowstyle='-|>', mutation_scale=8, ec='#000000', fc='#000000' ))
+ax.add_patch(a)
+
+
+# oblique shock B wave
+B_points = [
+    (0, 0),
+    (0.7, 0)
+]
+
+Bs = rotate_points(B_points, -os_angleA*180/m.pi)
+B_vec = translate_points(Bs, dx,dy)
+Bxs = [i for i,j in B_vec]
+Bys = [j for i,j in B_vec]
+ax.plot(Bxs, Bys, "--r")
+
+# PM expansion by angle dnu
+ps_C = [
+    (0, 0),
+    (0.7, 0)
+]
+
+
+ps_C = rotate_points(ps_C, -dnu)
+ps_C = translate_points(ps_C, Bxs[-1], Bys[-1])
+Cxs = [i for i,j in ps_C]
+Cys = [j for i,j in ps_C]
+ax.plot(Cxs, Cys, ":c")
+
+# get expansion fan
+mu3 = m.asin(1/M3)*180/m.pi
+mu4 = m.asin(1/M4)*180/m.pi
+print(f"M3 = {M3} -> mu3 = {mu3}")
+print(f"M4 = {M4} -> mu4 = {mu4}")
+
+ps3 = [
+    (0  ,0),
+    (0.6,0)
+]
+
+ps3 = rotate_points(ps3, mu3)
+ps3 = translate_points(ps3, Cxs[0], Cys[0])
+xs3 = [i for i,j in ps3]
+ys3 = [j for i,j in ps3]
+ax.plot(xs3, ys3, ":m")
+
+ps4 = [
+    (0  ,0),
+    (0.7,0)
+]
+
+ps4 = rotate_points(ps4, mu4)
+ps4 = translate_points(ps4, Cxs[0], Cys[0])
+xs4 = [i for i,j in ps4]
+ys4 = [j for i,j in ps4]
+ax.plot(xs4, ys4, ":m")
+
+
+
+
+
+ax.set_xlim(-0.5, 2.5)
+ax.set_ylim(-0.5, 2.5)
+ax.set_aspect('equal')
+plt.grid(True)
+plt.title('Nozzle Flows')
+plt.show()
+
+
 
 # %%
