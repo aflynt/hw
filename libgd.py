@@ -570,3 +570,57 @@ def translate_points(point_list, dx=0, dy=0):
         tpl.append((txi,tyi))
 
     return tpl
+
+## FANNO FLOW
+def fanno_ratio_T(M, k=1.4):
+    NUMER = (k+1)/2
+    iTR = 1 + (k-1)/2*M**2
+
+    TR = NUMER/iTR
+    return TR
+
+def fanno_ratio_P(M, k=1.4):
+    TR = fanno_ratio_T(M,k)
+
+    PR = 1/M*m.sqrt(TR)
+    return PR
+
+def fanno_ratio_rho(M, k=1.4):
+    TR = fanno_ratio_T(M,k)
+
+    RR = 1/M*m.sqrt(1/TR)
+    return RR
+
+def fanno_ratio_v(M, k=1.4):
+
+    VR = 1/fanno_ratio_rho(M,k)
+    return VR
+
+def fanno_ratio_Pt(M, k=1.4):
+    TR = fanno_ratio_T(M,k)
+
+    n = (k+1)/(2*(k-1))
+
+    PTR = 1/M*(1/TR)**n
+    return PTR
+
+def fanno_flod_max(M, k=1.4):
+
+    itr = isen_ratio_t(M)
+    kp1 = k+1
+    km1 = k-1
+    kp1o2 = kp1/2
+    km1o2 = km1/2
+
+    flod = kp1o2/k*m.log(kp1o2*M*M/itr) + (1/M**2-1)/k
+    return flod
+
+def fanno_SmaxoR(M, k=1.4):
+    '''
+    ds/R for fanno flow
+    '''
+
+    ptr = fanno_ratio_Pt(M,k)
+    dsor = m.log(ptr)
+
+    return dsor

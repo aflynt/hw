@@ -185,6 +185,46 @@ class Test_PM(unittest.TestCase):
         M2_true = 1.6638565212488174
         self.assertAlmostEqual(M2_true, M2, 3)
 
+class Test_fanno(unittest.TestCase):
+
+    def test_tr(self):
+        M = 3
+        resx = gd.fanno_ratio_T(M)
+        resy = 0.42857
+        self.assertAlmostEqual(resx,resy, 4)
+
+    def test_pr(self):
+        M = 3
+        resx = gd.fanno_ratio_P(M)
+        resy = 0.2182178902359924
+        self.assertAlmostEqual(resx,resy, 4)
+    
+    def test_ptr(self):
+        M = 3
+        resx = gd.fanno_ratio_Pt(M)
+        resy = 4.23457
+        self.assertAlmostEqual(resx,resy, 5)
+
+    def test_v(self):
+        M = 3
+        resx = gd.fanno_ratio_v(M)
+        resy = 1.96396
+        self.assertAlmostEqual(resx,resy, 5)
+
+    def test_flodmax(self):
+        M = 3
+        resx = gd.fanno_flod_max(M)
+        resy = 0.52216
+        self.assertAlmostEqual(resx,resy, 4)
+
+    def test_smaxor(self):
+        M = 3
+        resx = gd.fanno_SmaxoR(M)
+        resy = 1.44328 
+        self.assertAlmostEqual(resx,resy, 4)
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
