@@ -624,3 +624,10 @@ def fanno_SmaxoR(M, k=1.4):
     dsor = m.log(ptr)
 
     return dsor
+
+def fanno_M_from_PR(PR, MLO=0.1, MHI=1.0, k=1.4):
+
+    fzero = lambda M: fanno_ratio_P(M, k) - PR
+    M = bisector(fzero, MLO, MHI)
+
+    return M
