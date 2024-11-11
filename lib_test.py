@@ -224,6 +224,31 @@ class Test_fanno(unittest.TestCase):
         self.assertAlmostEqual(resx,resy, 4)
 
 
+class Test_rayleigh(unittest.TestCase):
+
+    def test_ttr(self):
+        M=0.8
+        resx = gd.ray_ratio_Tt(M)
+        resy = 0.96395
+        self.assertAlmostEqual(resx,resy, 5)
+
+    def test_tr(self):
+        M=0.8
+        resx = gd.ray_ratio_T(M)
+        resy = 1.02548
+        self.assertAlmostEqual(resx,resy, 5)
+
+    def test_pr(self):
+        M=0.8
+        resx = gd.ray_ratio_P(M)
+        resy = 1.26582
+        self.assertAlmostEqual(resx,resy, 5)
+
+    def test_ptr(self):
+        M=0.8
+        resx = gd.ray_ratio_Pt(M)
+        resy = 1.01934
+        self.assertAlmostEqual(resx,resy, 5)
 
 
 if __name__ == '__main__':

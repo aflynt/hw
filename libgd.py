@@ -631,3 +631,34 @@ def fanno_M_from_PR(PR, MLO=0.1, MHI=1.0, k=1.4):
     M = bisector(fzero, MLO, MHI)
 
     return M
+
+## RAYLEIGH FLOW
+def ray_ratio_Tt(M, k=1.4):
+    A = 2*(1+k)*M**2
+    B = (1+k*M**2)**2
+    C = isen_ratio_t(M, k)
+
+    ttr = A*C/B
+    return ttr
+
+def ray_ratio_T(M, k=1.4):
+    A = (1+k)**2*M**2
+    B = (1+k*M**2)**2
+
+    tr = A/B
+    return tr
+
+def ray_ratio_P(M, k=1.4):
+
+    pr = (1+k)/(1+k*M**2)
+    return pr
+
+def ray_ratio_Pt(M, k=1.4):
+
+    A = ray_ratio_P(M, k)
+    B = isen_ratio_t(M,k)
+    C = isen_ratio_t(1,k)
+    n = k/(k-1)
+
+    ptr = A*(B/C)**n
+    return ptr
