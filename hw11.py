@@ -171,36 +171,91 @@ def p1005():
     print_var("Pt2", Pt2)
 
 # %%
-#def p1009():
+def p1009():
 
-f = 0.02
-dx = 10.86 # ft
-D = 1 # ft
-M1 = 3
-Tt1 = 600 # R
-Pt1 = 150 # psia
-
-fdxod = f*dx/D
-
-flmaxod1 = fanno_flod_max(M1)
-
-flmaxod2 = flmaxod1 - fdxod
-
-fzero = lambda M: fanno_flod_max(M) - flmaxod2
-
-M2 = bisector(fzero, M1, 1)
-
-#fPR = fanno_ratio_P(M1)
-#fTR = fanno_ratio_T(M1)
-fPTR1 = fanno_ratio_Pt(M1)
-
-
-PtS = 1/fPTR1*Pt1
-
-
-fPTR2 = fanno_ratio_Pt(M2)
-
-Pt2 = fPTR2 * PtS
+    f = 0.02
+    dx = 10.86 # ft
+    D = 1 # ft
+    M1 = 3
+    Tt1 = 600 # R
+    Pt1 = 150 # psia
+    
+    fdxod = f*dx/D
+    
+    flmaxod1 = fanno_flod_max(M1)
+    
+    flmaxod2 = flmaxod1 - fdxod
+    
+    fzero = lambda M: fanno_flod_max(M) - flmaxod2
+    
+    M2 = bisector(fzero, M1, 1)
+    
+    #fPR = fanno_ratio_P(M1)
+    #fTR = fanno_ratio_T(M1)
+    fPTR1 = fanno_ratio_Pt(M1)
+    
+    
+    PtS = 1/fPTR1*Pt1
+    
+    
+    fPTR2 = fanno_ratio_Pt(M2)
+    
+    Pt2 = fPTR2 * PtS
 
 #p1009()
+
+# %%
+
+g = Gas_mgr().NITROGEN_EE
+g.print_props()
+#M2 = 0.5
+M2 = 0.3
+Tt2 = 600
+Pt2 = 100
+
+iPR2 = isen_ratio_p(M2)
+iTR2 = isen_ratio_t(M2)
+rPR2 = ray_ratio_P(M2)
+rTR2 = ray_ratio_T(M2)
+rTTR2 = ray_ratio_Tt(M2)
+
+print_var("iPR2 =Pt/P",iPR2 )
+print_var("iTR2 =Tt/T",iTR2 )
+print_var("rPR2 =P/P*",rPR2 )
+print_var("rTR2 =T/T*",rTR2 )
+print_var("rTTR2=Tt/Tt*",rTTR2)
+
+P2 = 1/iPR2*Pt2
+T2 = 1/iTR2*Tt2
+
+PS = 1/rPR2*P2
+TS = 1/rTR2*T2
+
+TtS = 1/rTTR2*Tt2
+#q = g.cp*(TtS - Tt2)
+
+print_var("P2", P2)
+print_var("T2", T2)
+print_var("PS", PS)
+print_var("TS", TS)
+print_var("TtS", TtS)
+#print_var("q", q)
+
+rPR3 = 47.42/PS
+print_var("P3/P*", rPR3)
+
+fzero = lambda M: ray_ratio_P(M) - rPR3
+
+M3 = bisector(fzero, 0.2, 1)
+print_var("M3", M3)
+
+rTTR3 = ray_ratio_Tt(M3)
+print_var("Tt3/Tt*", rTTR3)
+
+Tt3 = rTTR3*TtS
+print_var("Tt3'", Tt3)
+
+q = g.cp*(Tt3 - Tt2)
+print_var("q", q)
+
 # %%
