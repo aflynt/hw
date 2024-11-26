@@ -235,7 +235,7 @@ def A2oA1_given_MR_ds(M1:float, M2:float, ds:float, g:Gas):
 
 def choked_mdot(Pt:float, Tt:float, Astar, g:Gas):
     k = g.k
-    C = m.sqrt(g.k/g.R) * ((k+1)/2)**(-(k+1)/(2*(k-1)))
+    C = m.sqrt(g.g_c*g.k/g.R) * ((k+1)/2)**(-(k+1)/(2*(k-1)))
     moa = Astar*Pt/m.sqrt(Tt) * C
     return moa 
 
