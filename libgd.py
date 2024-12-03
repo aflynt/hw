@@ -279,6 +279,47 @@ def norm_shock_ptr(M1, k=1.4):
     ptr = A**C1 * B**C2
     return ptr
 
+def norm_shock_p1opt2(M1, k=1.4):
+
+    M2 = norm_shock_m2(M1, k)
+    PR = norm_shock_pr(M1, k)
+    ipr = isen_ratio_p(M2, k)
+    p1opt2 = 1/PR*1/ipr
+    return p1opt2
+
+def norm_get_M1_given_pr(p2op1, k=1.4):
+    fzero = lambda M1: norm_shock_pr(M1, k) - p2op1
+
+    M1 = bisector(fzero, 1, 20)
+    return M1
+
+def norm_get_M1_given_p1opt2(p1opt2, k=1.4):
+
+    fzero = lambda M1: norm_shock_p1opt2(M1, k) - p1opt2
+
+    M1 = bisector(fzero, 1, 20)
+    return M1
+
+def norm_get_M1_given_rr(rr, k=1.4):
+
+    fzero = lambda M1: norm_shock_rr(M1, k) - rr
+    M1 = bisector(fzero, 1, 20)
+    return M1
+
+def norm_get_M1_given_tr(tr, k=1.4):
+
+    fzero = lambda M1: norm_shock_tr(M1, k) - tr
+    M1 = bisector(fzero, 1, 20)
+    return M1
+
+def norm_get_M1_given_ptr(ptr, k=1.4):
+
+    fzero = lambda M1: norm_shock_ptr(M1, k) - ptr
+    M1 = bisector(fzero, 1, 20)
+    return M1
+
+
+
 def norm_shock_dvoa(M1: float, k:float =1.4) -> float:
     '''
     dvoa = (V1 - V2)/a1
