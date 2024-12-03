@@ -175,7 +175,7 @@ fns.rowconfigure(7, weight=5)
 fns.rowconfigure(8, weight=5)
 fns.rowconfigure(9, weight=5)
 
-tl = ttk.Label(fns, text="Normal Shocks", style="BW.TLabel", font=("Consolas", 12, "bold"))
+tl = ttk.Label(fns, text="Normal Shocks", style="BW.TLabel", font=("Kozuka Mincho Pro M", 12, "bold"))
 tl.grid(row=1, column=1, sticky=(E,W))
 
 
@@ -220,73 +220,72 @@ entry_x.bind("<Return>", fwrapper)
 
 
 ## isentropics ----------------------------------------------
+#ix = StringVar(value="2")
 
-#class PackIsen:
-#   def __init__(self, parent):
+class PackIsen:
+   def __init__(self, parent):
 
-fis = ttk.Frame(P2, padding="3 3 12 12", )
-P2.add(fis)
-fis.grid(column=0, row=0, sticky=(N, S, E, W) )
-P2.columnconfigure(0, weight=1)
-P2.rowconfigure(0, weight=1)
-fis.columnconfigure(1, weight=1)
-fis.columnconfigure(2, weight=2)
-fis.columnconfigure(3, weight=1)
-fis.rowconfigure(1, weight=1)
-fis.rowconfigure(2, weight=5)
-fis.rowconfigure(3, weight=5)
-fis.rowconfigure(4, weight=5)
-fis.rowconfigure(5, weight=5)
-fis.rowconfigure(6, weight=5)
-fis.rowconfigure(7, weight=5)
-fis.rowconfigure(8, weight=5)
-fis.rowconfigure(9, weight=5)
-fis.rowconfigure(10, weight=5)
-fis.rowconfigure(11, weight=5)
-fis.rowconfigure(12, weight=5)
-fis.rowconfigure(13, weight=5)
+    fis = ttk.Frame(parent, padding="3 3 12 12")
+    parent.add(fis)
+    fis.grid(column=0, row=0, sticky=(N, S, E, W))
+    parent.columnconfigure(0, weight=1)
+    parent.rowconfigure(0, weight=1)
+    fis.columnconfigure(1, weight=1)
+    fis.columnconfigure(2, weight=2)
+    fis.columnconfigure(3, weight=1)
+    fis.rowconfigure(1, weight=1)
+    fis.rowconfigure(2, weight=5)
+    fis.rowconfigure(3, weight=5)
+    fis.rowconfigure(4, weight=5)
+    fis.rowconfigure(5, weight=5)
+    fis.rowconfigure(6, weight=5)
+    fis.rowconfigure(7, weight=5)
+    fis.rowconfigure(8, weight=5)
+    fis.rowconfigure(9, weight=5)
+    fis.rowconfigure(10, weight=5)
+    fis.rowconfigure(11, weight=5)
+    fis.rowconfigure(12, weight=5)
+    fis.rowconfigure(13, weight=5)
+    itl = ttk.Label(fis, text="Isentropic Flow", style="BW.TLabel", font=("Kozuka Mincho Pro M", 12, "bold"))
+    itl.grid(row=1, column=1, sticky=(E,W))
 
-itl = ttk.Label(fis, text="Isentropic Flow", style="BW.TLabel", font=("Consolas", 12, "bold"))
-itl.grid(row=1, column=1, sticky=(E,W))
+    irdict = {
+            'M'          : results_pair(fis,  3, 'M' ),
+            'Pt/p'       : results_pair(fis,  4, 'Pt/p' ),
+            'p/Pt'       : results_pair(fis,  5, 'p/Pt' ),
+            'Tt/T'       : results_pair(fis,  6, 'Tt/T' ),
+            'T/Tt'       : results_pair(fis,  7, 'T/Tt' ),
+            'PM-angle'   : results_pair(fis,  8, 'PM-angle' ),
+            'Mach angle' : results_pair(fis,  9, 'Mach angle' ),
+            'P/P*'       : results_pair(fis, 10, 'P/P*' ),
+            'T/T*'       : results_pair(fis, 11, 'T/T*' ),
+            'A/A*'       : results_pair(fis, 12, 'A/A*' ),
+            'type'       : results_pair(fis, 13, 'type' ),
+    }
 
-ix = StringVar(value="2")
-irdict = {
-        'M'          : results_pair(fis,  3, 'M' ),
-        'Pt/p'       : results_pair(fis,  4, 'Pt/p' ),
-        'p/Pt'       : results_pair(fis,  5, 'p/Pt' ),
-        'Tt/T'       : results_pair(fis,  6, 'Tt/T' ),
-        'T/Tt'       : results_pair(fis,  7, 'T/Tt' ),
-        'PM-angle'   : results_pair(fis,  8, 'PM-angle' ),
-        'Mach angle' : results_pair(fis,  9, 'Mach angle' ),
-        'P/P*'       : results_pair(fis, 10, 'P/P*' ),
-        'T/T*'       : results_pair(fis, 11, 'T/T*' ),
-        'A/A*'       : results_pair(fis, 12, 'A/A*' ),
-        'type'       : results_pair(fis, 13, 'type' ),
-}
+    # Combobox
+    i_incb = ttk.Combobox(fis, textvariable=irdict['type'].resstr)
+    i_incb.grid(row=2, column=1, stick=(W,E))
+    i_incb['values'] = ('M', 'T/Tt', 'P/Pt', 'A/A*-','A/A*+', 'PM-angle (deg)')
+    i_incb.set('M')
+    i_incb.state(['readonly'])
 
-# Combobox
-i_incb = ttk.Combobox(fis, textvariable=irdict['type'].resstr)
-i_incb.grid(row=2, column=1, stick=(W,E))
-#i_incb.bind('<<ComboboxSelected>>', self.update_type)
-i_incb['values'] = ('M', 'T/Tt', 'P/Pt', 'A/A*-','A/A*+', 'PM-angle (deg)')
-i_incb.set('M')
-i_incb.state(['readonly'])
+    # Input Entry
+    i_entry_x = ttk.Spinbox(fis, width=7, from_=0.0, to=10, increment=0.1)
+    i_entry_x.set("4")
+    i_entry_x.grid(row=2, column=2, sticky=(W,E))
+    
+    ifcmd = lambda : isen_calc(float(i_entry_x.get()), i_incb.get(), irdict)
+    ret_wrapper = lambda e: ifcmd()
+    
+    i_entry_x.bind('<Return>', ret_wrapper)
+    
+    # Go Button
+    ttk.Button(fis, text="Calculate", command=ifcmd).grid(row=2, column=3, sticky=(W,E))
+    
+    for child in fis.winfo_children(): 
+      child.grid_configure(padx=5, pady=5)
 
-# Input Entry
-i_entry_x = ttk.Entry(fis, width=7, textvariable=ix)
-i_entry_x.grid(row=2, column=2, sticky=(W,E))
-
-
-ifcmd = lambda : isen_calc(float(i_entry_x.get()), i_incb.get(), irdict)
-ifcmdx = lambda e: isen_calc(float(i_entry_x.get()), i_incb.get(), irdict)
-ret_wrapper = lambda e: ifcmd()
-
-i_entry_x.bind('<Return>', ret_wrapper)
-
-# Go Button
-ttk.Button(fis, text="Calculate", command=ifcmd).grid(row=2, column=3, sticky=(W,E))
-
-for child in fis.winfo_children(): 
-  child.grid_configure(padx=5, pady=5)
+PackIsen(P2)
 
 root.mainloop()
