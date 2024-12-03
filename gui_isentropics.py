@@ -20,28 +20,45 @@ class Isen:
 
     def __init__(self, root):
 
-        root.title("Isentropic Flow Relations")
+        #root.title("Isentropic Flow Relations")
 
         self.mainframe = ttk.Frame(root, padding="3 3 12 12", )
         self.mainframe.grid(column=0, row=0, sticky=(N, S, E, W) )
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
 
+        self.mainframe.columnconfigure(1, weight=1)
+        self.mainframe.columnconfigure(2, weight=2)
+        self.mainframe.columnconfigure(3, weight=1)
+        self.mainframe.rowconfigure(1, weight=1)
+        self.mainframe.rowconfigure(2, weight=5)
+        self.mainframe.rowconfigure(3, weight=5)
+        self.mainframe.rowconfigure(4, weight=5)
+        self.mainframe.rowconfigure(5, weight=5)
+        self.mainframe.rowconfigure(6, weight=5)
+        self.mainframe.rowconfigure(7, weight=5)
+        self.mainframe.rowconfigure(8, weight=5)
+        self.mainframe.rowconfigure(9, weight=5)
+        self.mainframe.rowconfigure(10, weight=5)
+        self.mainframe.rowconfigure(11, weight=5)
+        self.mainframe.rowconfigure(12, weight=5)
+
+
         self.x = StringVar(value="2")
 
         # results dict
         self.rdict = {
-                'M'          : results_pair(self.mainframe,  3, 'M' ),
-                'Pt/p'       : results_pair(self.mainframe,  4, 'Pt/p' ),
-                'p/Pt'       : results_pair(self.mainframe,  5, 'p/Pt' ),
-                'Tt/T'       : results_pair(self.mainframe,  6, 'Tt/T' ),
-                'T/Tt'       : results_pair(self.mainframe,  7, 'T/Tt' ),
-                'PM-angle'   : results_pair(self.mainframe,  8, 'PM-angle' ),
-                'Mach angle' : results_pair(self.mainframe,  9, 'Mach angle' ),
-                'P/P*'       : results_pair(self.mainframe, 10, 'P/P*' ),
-                'T/T*'       : results_pair(self.mainframe, 11, 'T/T*' ),
-                'A/A*'       : results_pair(self.mainframe, 12, 'A/A*' ),
-                'type'       : results_pair(self.mainframe, 13, 'type' ),
+                'M'          : results_pair(self.mainframe,  2, 'M' ),
+                'Pt/p'       : results_pair(self.mainframe,  3, 'Pt/p' ),
+                'p/Pt'       : results_pair(self.mainframe,  4, 'p/Pt' ),
+                'Tt/T'       : results_pair(self.mainframe,  5, 'Tt/T' ),
+                'T/Tt'       : results_pair(self.mainframe,  6, 'T/Tt' ),
+                'PM-angle'   : results_pair(self.mainframe,  7, 'PM-angle' ),
+                'Mach angle' : results_pair(self.mainframe,  8, 'Mach angle' ),
+                'P/P*'       : results_pair(self.mainframe,  9, 'P/P*' ),
+                'T/T*'       : results_pair(self.mainframe, 10, 'T/T*' ),
+                'A/A*'       : results_pair(self.mainframe, 11, 'A/A*' ),
+                'type'       : results_pair(self.mainframe, 12, 'type' ),
         }
 
         # Combobox
@@ -52,16 +69,13 @@ class Isen:
         self.incb.set('M')
         self.incb.state(['readonly'])
 
-        # Input Entry Label
-        iel = ttk.Label(self.mainframe, text="Value: ")
-        iel.grid(   row=2, column=1, sticky=W)
 
         # Input Entry
         entry_x = ttk.Entry(self.mainframe, width=7, textvariable=self.x)
-        entry_x.grid(row=2, column=2, sticky=(W,E))
+        entry_x.grid(row=1, column=2, sticky=(W,E))
 
         # Go Button
-        ttk.Button(self.mainframe, text="Calculate", command=self.calculate).grid(row=2, column=3, sticky=E)
+        ttk.Button(self.mainframe, text="Calculate", command=self.calculate).grid(row=1, column=3, sticky=(W,E))
 
         for child in self.mainframe.winfo_children(): 
             child.grid_configure(padx=5, pady=5)
@@ -134,6 +148,7 @@ class Isen:
         except ValueError:
             pass
 
-root = Tk()
-Isen(root)
-root.mainloop()
+if __name__ == "__main__":
+    root = Tk()
+    Isen(root)
+    root.mainloop()
