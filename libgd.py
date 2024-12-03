@@ -373,7 +373,7 @@ def oblique_beta_zero(M, theta, k=1.4):
     '''
     Get oblique shock angle "BETA"
     * M = incoming mach number
-    * theta = deflection angle 
+    * theta = deflection angle (rad)
     '''
 
     betas = np.arange(0.0001,m.pi/3,0.0001)
@@ -411,6 +411,7 @@ def oblique_m2(M1, theta, k=1.4):
 def oblique_ratio_rho(M1, theta, k=1.4):
     '''
     oblique shock density ratio rho2/rho1
+    theta = deflection angle (rad)
     '''
 
     beta = oblique_beta_zero(M1,theta, k)
@@ -425,7 +426,7 @@ def oblique_ratio_p(M1, theta, k=1.4):
     '''
     P2/P1 across oblique shock
     * M1    = incoming Mach number
-    * theta = deflection angle
+    * theta = deflection angle (rad)
     '''
 
     beta = oblique_beta_zero(M1,theta, k)
@@ -436,7 +437,7 @@ def oblique_ratio_pt(M1, delta, k=1.4):
     '''
     Pt1/Pt0 total pressure ratio
     * M1    = incoming mach number
-    * delta = deflection angle
+    * delta = deflection angle (rad)
     '''
     beta = oblique_beta_zero(M1,delta, k)
 
@@ -479,7 +480,7 @@ def oblique_ratio_t(M1, theta, k=1.4):
     '''
     T2/T1 across oblique shock
     * M1    = incoming Mach number
-    * theta = deflection angle
+    * theta = deflection angle (rad)
     '''
 
     beta = oblique_beta_zero(M1, theta, k)
@@ -490,8 +491,8 @@ def oblique_ratio_t(M1, theta, k=1.4):
 def oblique_m1(delta, theta):
     '''
     M1    = incoming Mach number
-    delta = deflection angle
-    theta = shock      angle
+    delta = deflection angle (rad)
+    theta = shock      angle (rad)
     '''
 
     d = delta
@@ -518,7 +519,7 @@ def oblique_delta(M1, theta):
     '''
     Find oblique shock turn angle
     * M1 incoming mach number
-    * theta shock angle
+    * theta shock angle (rad)
     '''
     th = theta
     k = 1.4
