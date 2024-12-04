@@ -7,6 +7,79 @@ from gui_isentropics import Isen
 from typing import List, Dict, Callable
 import numpy as np
 
+def ray_get_mach(x, intype):
+
+  M = x
+  try:
+    match intype:
+      #'U/U*',
+      #'(S*-S)/R_sub',
+      #'(S*-S)/R_sup',
+      case 'M':
+        M = x
+      case 'Tt/Tt*_sub':
+        fzero = lambda mm: gd.ray_ratio_Tt(mm) - x
+        M = gd.bisector(fzero, 0, 1)
+      case 'Tt/Tt*_sup':
+        fzero = lambda mm: gd.ray_ratio_Tt(mm) - x
+        M = gd.bisector(fzero, 1, 10)
+      case 'T/T*_sub':
+        fzero = lambda mm: gd.ray_ratio_T(mm) - x
+        M = gd.bisector(fzero, 0, 1)
+      case 'T/T*_sup':
+        fzero = lambda mm: gd.ray_ratio_T(mm) - x
+        M = gd.bisector(fzero, 1, 10)
+      case 'P/P*':
+        fzero = lambda mm: gd.ray_ratio_P(mm) - x
+        M = gd.bisector(fzero, 1e-4, 20)
+      case 'Pt/Pt*_sub':
+        fzero = lambda MM: gd.ray_ratio_Pt(MM) - x
+        M = gd.bisector(fzero, 0.001, 1)
+      case 'Pt/Pt*_sup':
+        fzero = lambda MM: gd.ray_ratio_Pt(MM) - x
+        M = gd.bisector(fzero, 1, 20)
+      case 'U/U*':
+        fzero = lambda MM: gd.ray_ratio_v(MM) - x
+        M = gd.bisector(fzero, 0.01, 20)
+      case '(S*-S)/R_sub':
+        dsor = x
+        fzero = lambda m: gd.ray_dsor(m) - dsor
+        M = gd.bisector(fzero, 0.001, 1)
+      case '(S*-S)/R_sup':
+        dsor = x
+        fzero = lambda m: gd.ray_dsor(m) - dsor
+        M = gd.bisector(fzero, 1, 20)
+      case '_':
+        pass
+
+  except Exception as e:
+     print(f"error e: {str(e)}")
+     traceback.print_exc()
+
+  return M
+
+def ray_calc(x: float, intype: str, rdict: dict):
+  try:
+    M = ray_get_mach(x, intype)
+    TTR = gd.ray_ratio_Tt(M)
+    TR  = gd.ray_ratio_T(M)
+    PR  = gd.ray_ratio_P(M)
+    PTR = gd.ray_ratio_Pt(M)
+    VR  = gd.ray_ratio_v(M)
+    dsor = gd.ray_dsor(M)
+
+    rdict['M'].resstr.set(   f"{M:14.6f}") 
+    rdict['T/T*'].resstr.set(  f"{TR:14.6f}")
+    rdict['P/P*'].resstr.set(  f"{PR:14.6f}")
+    rdict['Pt/Pt*'].resstr.set(  f"{PTR:14.6f}")
+    rdict['U/U*'].resstr.set(  f"{VR:14.6f}")
+    rdict['Tt/Tt*'].resstr.set(  f"{TTR:14.6f}")
+    rdict['(S*-S)/R'].resstr.set(  f"{dsor:14.6f}")
+
+  except Exception as e:
+    print(f"error e: {str(e)}")
+    traceback.print_exc()
+
 def fanno_get_mach(x, intype):
 
   M = x
@@ -17,37 +90,37 @@ def fanno_get_mach(x, intype):
       case 'T/T*':
         TR = max(min(x, 0.2), 0) # must be bewteen 0 and 1.2
         fzero = lambda MM: gd.fanno_ratio_T(MM) - TR
-        M = gd.bisector(fzero, -1.01, 20)
+        M = gd.bisector(fzero, 0.01, 20)
       case 'P/P*':
-        M = gd.fanno_M_from_PR(x, -1.05, 10)
+        M = gd.fanno_M_from_PR(x, 0.05, 10)
       case 'Pt/Pt*_sub':
         PTR = max(x,0)
         fzero = lambda MM: gd.fanno_ratio_Pt(MM) - PTR
-        M = gd.bisector(fzero, -1.001, 1)
+        M = gd.bisector(fzero, 0.001, 1)
       case 'Pt/Pt*_sup':
         PTR = max(x,0)
         fzero = lambda MM: gd.fanno_ratio_Pt(MM) - PTR
-        M = gd.bisector(fzero, 0, 20)
+        M = gd.bisector(fzero, 1, 20)
       case 'U/U*':
         VR = x
         fzero = lambda MM: gd.fanno_ratio_v(MM) - VR
-        M = gd.bisector(fzero, -1.001, 20)
+        M = gd.bisector(fzero, 0.001, 20)
       case 'fL*/D_sub':
         fld = x
         fzero = lambda MM: gd.fanno_flod_max(MM) - fld
-        M = gd.bisector(fzero, -1.001, 1)
+        M = gd.bisector(fzero, 0.001, 1)
       case 'fL*/D_sup':
         fld = min(x, -1.8214)
         fzero = lambda MM: gd.fanno_flod_max(MM) - fld
-        M = gd.bisector(fzero, 0, 20)
+        M = gd.bisector(fzero, 1, 20)
       case '(S*-S)/R_sub':
         dsor = x
         fzero = lambda m: gd.fanno_SmaxoR(m) - dsor
-        M = gd.bisector(fzero, -1.001, 1)
+        M = gd.bisector(fzero, 0.001, 1)
       case '(S*-S)/R_sup':
         dsor = x
         fzero = lambda m: gd.fanno_SmaxoR(m) - dsor
-        M = gd.bisector(fzero, 0, 20)
+        M = gd.bisector(fzero, 1, 20)
       case '_':
         pass
 
@@ -372,8 +445,7 @@ mach_spinner = ttk.Spinbox(f3, width=7, from_=1.0, to=10, increment=0.25)
 mach_spinner.set("5.0")
 mach_spinner.grid(row=3, column=2, sticky=(W,E), padx=5, pady=5)
 
-# FANNO SHOCKS -------------------------------------
-
+# FANNO FLOW -------------------------------------
 P4 = ttk.PanedWindow(mp, orient=VERTICAL)
 P4.columnconfigure(0, weight=1)
 P4.rowconfigure(0, weight=1)
@@ -383,5 +455,16 @@ P4.add(f4)
 rlist4 = ['M','T/T*','P/P*','Pt/Pt*','U/U*','fL*/D','(S*-S)/R']
 clist4 = ('M','T/T*','P/P*','Pt/Pt*_sub','Pt/Pt*_sup','U/U*','fL*/D_sub','fL*/D_sup','(S*-S)/R_sub','(S*-S)/R_sup',)
 GenPack(f4, "Fanno Flow", rlist4, clist4, fanno_calc)
+
+# RAYLEIGH FLOW -------------------------------------
+P5 = ttk.PanedWindow(mp, orient=VERTICAL)
+P5.columnconfigure(0, weight=1)
+P5.rowconfigure(0, weight=1)
+mp.add(P5)
+f5 = ttk.Frame(P5, padding="3 3 12 12")
+P5.add(f5)
+rlist5 = ['M','Tt/Tt*','T/T*','P/P*','Pt/Pt*','U/U*','(S*-S)/R']
+clist5 = ('M','Tt/Tt*_sub','Tt/Tt*_sup','T/T*_sub','T/T*_sup','P/P*','Pt/Pt*_sub','Pt/Pt*_sup','U/U*','(S*-S)/R_sub','(S*-S)/R_sup',)
+GenPack(f5, "Rayleigh Flow", rlist5, clist5, ray_calc)
 
 root.mainloop()
