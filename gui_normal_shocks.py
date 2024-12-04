@@ -177,7 +177,7 @@ class results_pair:
         self.rlabel = ttk.Label(parent, textvariable=self.resstr)
 
         self.tlabel.grid(row=self.row, column=1, sticky=E)
-        self.rlabel.grid(row=self.row, column=2, sticky=E)
+        self.rlabel.grid(row=self.row, column=2, sticky=E, columnspan=2)
 
 class GenPack:
    def __init__(self, frame:ttk.Frame, labeltext:str, result_list:List[str], combo_list:List[str], result_callback: Callable[[float, str, Dict], None], ioffset=3):
@@ -201,7 +201,6 @@ class GenPack:
        self.irdict[resname] = results_pair(self.frame, i+ioffset, resname)
 
     # Combobox
-    #self.incb = ttk.Combobox(self.frame, textvariable=self.irdict['type'].resstr)
     self.incb = ttk.Combobox(self.frame, style="TCombobox")
     self.incb.grid(row=2, column=1, stick=(W,E))
     self.incb['values'] = combo_list
@@ -248,66 +247,52 @@ style.configure('TPanedWindow', background='#080808')
 
 
 # make paned windows
-mp = ttk.PanedWindow(root, orient=VERTICAL)
+#mp = ttk.PanedWindow(root, orient=VERTICAL)
+mp = ttk.PanedWindow(root, orient=HORIZONTAL)
 mp.pack(fill=BOTH, expand=1)
 
+
+
+
+
+# ISENTROPICS -------------------------------------
 P1 = ttk.PanedWindow(mp, orient=VERTICAL)
 P1.columnconfigure(0, weight=1)
 P1.rowconfigure(0, weight=1)
 mp.add(P1)
+f1 = ttk.Frame(P1, padding="3 3 12 12")
+P1.add(f1)
+irlist = ['M','Pt/p','p/Pt','Tt/T','T/Tt','PM-angle','Mach angle','P/P*','T/T*','A/A*']
+iclist = ('M', 'T/Tt', 'P/Pt', 'A/A*-','A/A*+', 'PM-angle (deg)')
+GenPack(f1, "Isentropic Flow", irlist, iclist, isen_calc)
 
-#P2 = ttk.PanedWindow(mp, orient=VERTICAL)
-#P2.columnconfigure(0, weight=1)
-#P2.rowconfigure(0, weight=1)
-#mp.add(P2)
+# NORMAL SHOCKS -------------------------------------
+P2 = ttk.PanedWindow(mp, orient=VERTICAL)
+P2.columnconfigure(0, weight=1)
+P2.rowconfigure(0, weight=1)
+mp.add(P2)
+f2 = ttk.Frame(P2, padding="3 3 12 12")
+P2.add(f2)
+print(f" width = {P2.winfo_width()}")
+nrlist = ['M1','M2','Pt2/Pt1','P2/P1','T2/T1','r2/r1','p1/pt2',]
+nclist = ('M1', 'M2', 'P2/P1', 'rho2/rho1','T2/T1', 'Pt2/Pt1', 'p1/pt2')
+GenPack(f2, "Normal Shocks", nrlist, nclist, norm_shock_calc)
 
+# OBLIQUE SHOCKS -----------------------------------
 P3 = ttk.PanedWindow(mp, orient=VERTICAL)
 P3.columnconfigure(0, weight=1)
 P3.rowconfigure(0, weight=1)
 mp.add(P3)
 
-
-# ISENTROPICS -------------------------------------
-f1 = ttk.Frame(P1, padding="3 3 12 12")
-P1.add(f1)
-irlist = ['M','Pt/p','p/Pt','Tt/T','T/Tt','PM-angle','Mach angle','P/P*','T/T*','A/A*','type',]
-iclist = ('M', 'T/Tt', 'P/Pt', 'A/A*-','A/A*+', 'PM-angle (deg)')
-GenPack(f1, "Isentropic Flow", irlist, iclist, isen_calc)
-
-# NORMAL SHOCKS -------------------------------------
-#f2 = ttk.Frame(P2, padding="3 3 12 12")
-#P2.add(f2)
-#nrlist = ['M1','M2','Pt2/Pt1','P2/P1','T2/T1','r2/r1','p1/pt2',]
-#nclist = ('M1', 'M2', 'P2/P1', 'rho2/rho1','T2/T1', 'Pt2/Pt1', 'p1/pt2')
-#GenPack(f2, "Normal Shocks", nrlist, nclist, norm_shock_calc)
-
-# OBLIQUE SHOCKS -----------------------------------
-
 f3 = ttk.Frame(P3, padding="3 3 12 12")
 P3.add(f3)
-#rlist3 = ['M1','M2','Pt2/Pt1','P2/P1','T2/T1','r2/r1','p1/pt2',]
-rlist3 = [
-   'M2',
-   'Turn Angle',
-   'Wave Angle',
-   'P2/P1',
-   'rho2/rho1',
-   'T2/T1',
-   'Pt2/Pt1',
-   'M1n',
-   'M2n',
-]
-clist3 = (
-   'turn angle weak',
-   'turn angle strong',
-   'wave angle',
-   'M1n',
-)
+rlist3 = ['M2','Turn Angle','Wave Angle','P2/P1','rho2/rho1','T2/T1','Pt2/Pt1','M1n','M2n',]
+clist3 = ('turn angle weak','turn angle strong','wave angle','M1n',)
 gpo = GenPack(f3, "Oblique Shocks", rlist3, clist3, oblique_shock_calc, 4)
 
 
 gpo.mach_label = ttk.Label(f3, text="M1:", style="BW.TLabel", font=("Kozuka Mincho Pro M", 11, "bold"))
-gpo.mach_label.grid(row=3, column=1, sticky=E, padx=5, pady=5)
+gpo.mach_label.grid(row=3, column=1, sticky=E, padx=5, pady=5 )
 gpo.mach_label.configure(background="#00005F", foreground="#7E5F7E")
 gpo.i_entry_x.set("20")
 
