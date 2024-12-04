@@ -704,3 +704,21 @@ def ray_ratio_Pt(M, k=1.4):
 
     ptr = A*(B/C)**n
     return ptr
+
+def ray_dsor(M, k=1.4):
+    '''
+    Rayleigh flow (s*-s)/R
+    ds/R = k/(k-1)*ln(Tt*/Tt) - ln(Pt*/Pt)
+    '''
+    TTR = ray_ratio_Tt(M, k)
+    PTR = ray_ratio_Pt(M, k)
+    dsor = k/(k-1)*m.log(1/TTR) - m.log(1/PTR)
+    return dsor
+
+def ray_ratio_v(M, k=1.4):
+    '''
+    Rayleigh flow U/U*
+    '''
+
+    VR = 1/((1+k*M**2)/((1+k)*M**2))
+    return VR
