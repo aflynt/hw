@@ -7,6 +7,79 @@ from gui_isentropics import Isen
 from typing import List, Dict, Callable
 import numpy as np
 
+def fanno_get_mach(x, intype):
+
+  M = x
+  try:
+    match intype:
+      case 'M':
+        M = x
+      case 'T/T*':
+        TR = max(min(x, 0.2), 0) # must be bewteen 0 and 1.2
+        fzero = lambda MM: gd.fanno_ratio_T(MM) - TR
+        M = gd.bisector(fzero, -1.01, 20)
+      case 'P/P*':
+        M = gd.fanno_M_from_PR(x, -1.05, 10)
+      case 'Pt/Pt*_sub':
+        PTR = max(x,0)
+        fzero = lambda MM: gd.fanno_ratio_Pt(MM) - PTR
+        M = gd.bisector(fzero, -1.001, 1)
+      case 'Pt/Pt*_sup':
+        PTR = max(x,0)
+        fzero = lambda MM: gd.fanno_ratio_Pt(MM) - PTR
+        M = gd.bisector(fzero, 0, 20)
+      case 'U/U*':
+        VR = x
+        fzero = lambda MM: gd.fanno_ratio_v(MM) - VR
+        M = gd.bisector(fzero, -1.001, 20)
+      case 'fL*/D_sub':
+        fld = x
+        fzero = lambda MM: gd.fanno_flod_max(MM) - fld
+        M = gd.bisector(fzero, -1.001, 1)
+      case 'fL*/D_sup':
+        fld = min(x, -1.8214)
+        fzero = lambda MM: gd.fanno_flod_max(MM) - fld
+        M = gd.bisector(fzero, 0, 20)
+      case '(S*-S)/R_sub':
+        dsor = x
+        fzero = lambda m: gd.fanno_SmaxoR(m) - dsor
+        M = gd.bisector(fzero, -1.001, 1)
+      case '(S*-S)/R_sup':
+        dsor = x
+        fzero = lambda m: gd.fanno_SmaxoR(m) - dsor
+        M = gd.bisector(fzero, 0, 20)
+      case '_':
+        pass
+
+  except Exception as e:
+     print(f"error e: {str(e)}")
+     traceback.print_exc()
+
+  return M
+
+def fanno_calc(x: float, intype: str, rdict: dict):
+  try:
+    M = fanno_get_mach(x, intype)
+    TR   = gd.fanno_ratio_T(M)
+    PR   = gd.fanno_ratio_P(M)
+    PTR  = gd.fanno_ratio_Pt(M)
+    VR   = gd.fanno_ratio_v(M)
+    fld  = gd.fanno_flod_max(M)
+    dsor = gd.fanno_SmaxoR(M)
+
+    rdict['M'].resstr.set(   f"{M:14.6f}") 
+    rdict['T/T*'].resstr.set(   f"{TR:14.6f}") 
+    rdict['P/P*'].resstr.set(   f"{PR:14.6f}") 
+    rdict['Pt/Pt*'].resstr.set(   f"{PTR:14.6f}") 
+    rdict['U/U*'].resstr.set(   f"{VR:14.6f}") 
+    rdict['fL*/D'].resstr.set(   f"{fld:14.6f}") 
+    rdict['(S*-S)/R'].resstr.set(   f"{dsor:14.6f}") 
+
+  except Exception as e:
+    print(f"error e: {str(e)}")
+    traceback.print_exc()
+
+
 def isen_get_M(x, intype):
 
     match intype:
@@ -273,7 +346,6 @@ P2.rowconfigure(0, weight=1)
 mp.add(P2)
 f2 = ttk.Frame(P2, padding="3 3 12 12")
 P2.add(f2)
-print(f" width = {P2.winfo_width()}")
 nrlist = ['M1','M2','Pt2/Pt1','P2/P1','T2/T1','r2/r1','p1/pt2',]
 nclist = ('M1', 'M2', 'P2/P1', 'rho2/rho1','T2/T1', 'Pt2/Pt1', 'p1/pt2')
 GenPack(f2, "Normal Shocks", nrlist, nclist, norm_shock_calc)
@@ -300,5 +372,16 @@ mach_spinner = ttk.Spinbox(f3, width=7, from_=1.0, to=10, increment=0.25)
 mach_spinner.set("5.0")
 mach_spinner.grid(row=3, column=2, sticky=(W,E), padx=5, pady=5)
 
+# FANNO SHOCKS -------------------------------------
+
+P4 = ttk.PanedWindow(mp, orient=VERTICAL)
+P4.columnconfigure(0, weight=1)
+P4.rowconfigure(0, weight=1)
+mp.add(P4)
+f4 = ttk.Frame(P4, padding="3 3 12 12")
+P4.add(f4)
+rlist4 = ['M','T/T*','P/P*','Pt/Pt*','U/U*','fL*/D','(S*-S)/R']
+clist4 = ('M','T/T*','P/P*','Pt/Pt*_sub','Pt/Pt*_sup','U/U*','fL*/D_sub','fL*/D_sup','(S*-S)/R_sub','(S*-S)/R_sup',)
+GenPack(f4, "Fanno Flow", rlist4, clist4, fanno_calc)
 
 root.mainloop()
