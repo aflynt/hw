@@ -5,6 +5,7 @@ import math as m
 import traceback
 from gui_isentropics import Isen
 from typing import List, Dict, Callable
+import numpy as np
 
 def isen_get_M(x, intype):
 
@@ -113,30 +114,57 @@ def norm_shock_calc(x: float, intype:str , rdict: dict):
         print(f"error: M1: {M1} e: {str(e)}")
         traceback.print_exc()
       
+def oblique_get_theta(x, intype, M1):
+
+  theta = x*m.pi/180  # rad
+  try:
+    match intype:
+       case 'turn angle weak':
+          theta = x*m.pi/180  # rad
+       case 'turn angle strong':
+          theta = x*m.pi/180  # rad
+       case 'wave angle':
+          wave_angle = x*m.pi/180
+          theta = gd.oblique_delta(M1, wave_angle)
+       case 'M1n':
+          wave_angle = m.asin(x/M1)
+          theta = gd.oblique_delta(M1, wave_angle)
+          print(f"ok here theta = {theta*180/m.pi}")
+       case '_':
+          pass
+
+  except Exception as e:
+     print(f"error e: {str(e)}")
+     traceback.print_exc()
+
+  return theta
+
 def oblique_shock_calc(x: float, intype: str, rdict: dict):
   try:
-    M1 = float(mach_spinner.get())
-    if intype == 'turn angle weak':
-      theta = x*m.pi/180  # rad
-      M2 = gd.oblique_m2(M1, theta)
-      wave_angle = gd.oblique_beta_zero(M1, theta) *180/m.pi
-      PR = gd.oblique_ratio_p(M1, theta)
-      RR = gd.oblique_ratio_rho(M1, theta)
-      TR = gd.oblique_ratio_t(M1, theta)
-      PTR = gd.oblique_ratio_pt(M1, theta)
-    else:
-      M2 = x
+    M1 = float(mach_spinner.get()) # always known
+    theta = oblique_get_theta(x, intype, M1)
+    M2 = gd.oblique_m2(M1, theta)
+    wave_angle = gd.oblique_beta_zero(M1, theta)
+    PR = gd.oblique_ratio_p(M1, theta)
+    RR = gd.oblique_ratio_rho(M1, theta)
+    TR = gd.oblique_ratio_t(M1, theta)
+    PTR = gd.oblique_ratio_pt(M1, theta)
+    M1n = M1*m.sin(wave_angle)
+    M2n = gd.norm_shock_m2(M1n)
 
     rdict['M2'].resstr.set(   f"{float(M2):15.6f}") 
-    rdict['Turn Angle'].resstr.set(f"{x:15.6f}")
-    rdict['Wave Angle'].resstr.set(f"{wave_angle:15.6f}")
+    rdict['Turn Angle'].resstr.set(f"{theta*180/m.pi:15.6f}")
+    rdict['Wave Angle'].resstr.set(f"{wave_angle*180/m.pi:15.6f}")
     rdict['P2/P1'].resstr.set(f"{PR:15.6f}")
     rdict['rho2/rho1'].resstr.set(f"{RR:15.6f}")
     rdict['T2/T1'].resstr.set(f"{TR:15.6f}")
     rdict['Pt2/Pt1'].resstr.set(f"{PTR:15.6f}")
+    rdict['M1n'].resstr.set(f"{M1n:15.6f}")
+    rdict['M2n'].resstr.set(f"{M2n:15.6f}")
 
   except Exception as e:
-    pass
+    print(f"error e: {str(e)}")
+    traceback.print_exc()
 
 
 class results_pair:
@@ -266,8 +294,8 @@ rlist3 = [
    'rho2/rho1',
    'T2/T1',
    'Pt2/Pt1',
-#   'M1n',
-#   'M2n',
+   'M1n',
+   'M2n',
 ]
 clist3 = (
    'turn angle weak',
